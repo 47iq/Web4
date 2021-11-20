@@ -13,7 +13,9 @@ class Graph extends Component{
     componentDidMount() {
         //todo
        /* console.log(this.props.checks)
-        drawCanvas(this.state.canvas.current, this.props.r, this.props.checks)*/
+        drawCanvas(this.state.canvas.current, this.props.r, this.props.checks)
+        width={350} height={350} */
+
     }
 
 

@@ -1,19 +1,19 @@
 const MAX_RADIUS = 3
 
 function xToCanvas(x, w) {
-    return x * (w * 0.4 / 5) + w / 2
+    return x * (w * 0.4 / MAX_RADIUS) + w / 2
 }
 
 function yToCanvas(y, h) {
-    return y * -(h * 0.4 / 5) + h / 2
+    return y * -(h * 0.4 / MAX_RADIUS) + h / 2
 }
 
 function canvasToX(clickX, w) {
-    return (clickX - w / 2) / (w * 0.4 / 5)
+    return (clickX - w / 2) / (w * 0.4 / MAX_RADIUS)
 }
 
 function canvasToY(clickY, h) {
-    return (-1) * (clickY - h / 2) / (h * 0.4 / 5)
+    return (-1) * (clickY - h / 2) / (h * 0.4 / MAX_RADIUS)
 }
 
 function drawCanvasPoint(x, y, r, canvas) {
@@ -32,12 +32,11 @@ function drawCanvasPoint(x, y, r, canvas) {
     context.closePath();
 }
 
-function drawChecks(checks, canvas) {
+function drawChecks(checks, canvas, r) {
     if (checks !== null && checks !== undefined)
         for (let check of checks) {
             let x = parseFloat(check["coordinateX"])
             let y = parseFloat(check["coordinateY"])
-            let r = parseFloat(check["radius"])
             drawCanvasPoint(x, y, r, canvas);
         }
 }
@@ -46,9 +45,9 @@ function isAreaHit(x, y, r) {
     x = parseFloat(x)
     y = parseFloat(y)
     r = parseFloat(r)
-    console.log(x <= r)
+    /*console.log(x <= r)
     console.log(`First: ${x >= 0 && y <= 0 && y >= -r && x <= r}, Second: ${(x >= 0 && y >= 0 && x * x + y * y <= r/2 * r/2)},
-     Third: ${(x <= 0 && y <= 0 && y >= -r/2 && (y >= (-x - r/2)) && x >= -r/2)}, x: ${x}, y: ${y}, r: ${r}`)
+     Third: ${(x <= 0 && y <= 0 && y >= -r/2 && (y >= (-x - r/2)) && x >= -r/2)}, x: ${x}, y: ${y}, r: ${r}`)*/
     return (x >= 0 && y <= 0 && y >= -r && x <= r) ||
         (x >= 0 && y >= 0 && x * x + y * y <= r/2 * r/2) ||
         (x <= 0 && y <= 0 && y >= -r/2 && (y >= (-x - r/2)) && x >= -r/2)
@@ -82,8 +81,6 @@ function drawAxis(context, w, h, xR, yR) {
 }
 
 export function drawCanvas(canvas, r, checks) {
-    //todo
-    console.log(checks)
     let context = canvas.getContext("2d");
     let w = canvas.width
     let xR = w * 0.4
@@ -108,10 +105,10 @@ export function drawCanvas(canvas, r, checks) {
     context.fill();
 
     drawAxis(context, w, h, xR, yR);
-    drawChecks(checks, canvas)
+    drawChecks(checks, canvas, r)
 }
 
-export function clearCanvas(checks, canvas) {
+export function clearCanvas(checks, canvas, r) {
     let context = canvas.getContext("2d");
     let w = canvas.width
     let xR = w * 0.4
@@ -120,16 +117,15 @@ export function clearCanvas(checks, canvas) {
     context.fillStyle = "#1a1a1a"
     context.fillRect(0, 0, w, h)
     drawAxis(context, w, h, xR, yR)
-    drawChecks(checks, canvas)
+    drawChecks(checks, canvas, r)
 }
 
 export function clicked(event) {
 
 }
 
-export function drawPoint(information, canvas) {
+export function drawPoint(information, canvas, r) {
     let x = information.x
     let y = information.y
-    let r = information.r
     drawCanvasPoint(x, y, r, canvas)
 }

@@ -96,7 +96,7 @@ class Main extends Component {
                                      tryToRefresh={this.tryToRefresh} getChecks={this.getChecks}
                                      refreshAttempted={this.state.refreshAttempted}/>
                 </div>
-                <Table checks={this.state.checks}/>
+                <Table checks={this.state.checks} coordinateX={"X"} coordinateY={"Y"} radius={"R"} hit={"Hit"}/>
             </div>)
     }
 

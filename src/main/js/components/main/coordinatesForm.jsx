@@ -37,7 +37,7 @@ class CoordinatesForm extends Component {
                     if (response.ok) {
                         this.setState({refreshAttempted: false})
                         this.props.addToTable(information)
-                        drawPoint(information, document.getElementById("canvas"))
+                        drawPoint(information, document.getElementById("canvas"), this.props.r_form)
                     } else {
                         this.props.tryToRefresh(this.submit, response)
                     }
@@ -49,7 +49,7 @@ class CoordinatesForm extends Component {
         clear().then(response => {
             if (response.ok) {
                 this.props.getChecks()
-                drawCanvas(document.getElementById("canvas"), document.getElementById("r").value, this.props.checks)
+                drawCanvas(document.getElementById("canvas"), this.props.r_form, this.props.checks)
                 this.setState({refreshAttempted: false})
             } else {
                 this.props.tryToRefresh(this.clear, response)
@@ -88,7 +88,7 @@ class CoordinatesForm extends Component {
                     drawCanvas(document.getElementById("canvas"), e.target.value, this.props.checks)
                 } else {
                     this.props.setR(e.target.value)
-                    clearCanvas(this.props.checks, document.getElementById("canvas"))
+                    clearCanvas(this.props.checks, document.getElementById("canvas"), this.props.r_form)
                 }
                 break;
             default:
@@ -122,19 +122,19 @@ class CoordinatesForm extends Component {
                         <div className={`form-group ${this.errorClass(this.state.formErrors.x)}`}>
                             <label>X </label>
                             <input type={"text"} name={"X"} value={this.props.x_form} onChange={this.handleUserInput}
-                                   maxLength={10} placeholder="Введите X(-3; 3)"/>
+                                   maxLength={10} placeholder="Enter X(-3; 3)"/>
                             <br/>
                         </div>
                         <div className={`form-group ${this.errorClass(this.state.formErrors.y)}`}>
                             <label>Y </label>
                             <input type={"text"} name={"Y"} value={this.props.y_form} onChange={this.handleUserInput}
-                                   maxLength={10} placeholder="Введите Y(-5; 5)"/>
+                                   maxLength={10} placeholder="Enter Y(-5; 5)"/>
                             <br/>
                         </div>
                         <div className={`form-group ${this.errorClass(this.state.formErrors.r)}`}>
                             <label>R </label>
                             <input type={"text"} name={"R"} value={this.props.r_form} onChange={this.handleUserInput}
-                                   maxLength={10} placeholder="Введите R(-3; 3)"/>
+                                   maxLength={10} placeholder="Enter R(-3; 3)"/>
                             <br/>
                         </div>
                     </form>

@@ -16,8 +16,6 @@
 
 
 .login-form {
-    margin: 2% 10% 10%;
-    padding: 2%;
     display: flex;
     flex-direction: column;
     flex-wrap: nowrap;
@@ -79,4 +77,18 @@
 #username, #password {
     width: 50%;
     margin-top: 2%;
+}
+
+@media screen and (max-width: 747px) {
+    .log-field {
+        /*font-size: larger;*/
+        font-size: medium;
+    }
+}
+
+@media screen and (max-width: 1176px) and (min-width: 747px){
+    .log-field {
+        /*font-size: larger;*/
+        font-size: large;
+    }
 }

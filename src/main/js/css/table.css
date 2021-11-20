@@ -1,0 +1,38 @@
+th {
+    cursor: pointer;
+    background-color: rgba(1, 1, 196, 0.68);
+    color: white;
+}
+
+th, td {
+    overflow: hidden;
+
+    width: 100%;
+    text-align: center;
+}
+
+th i {
+    float: right;
+    margin-top: 5px;
+}
+
+tr {
+    color: white;
+}
+
+table {
+    margin-left: 10%;
+    margin-right: 10%;
+
+    table-layout: fixed;
+    width: 100%;
+    /*border: 5px outset rgba(0, 0, 255, 0.68);
+    border-radius: 20px;
+    padding: 6px;*/
+}
+
+.table-wrapper {
+    margin-top: 5%;
+    display: flex;
+    margin-bottom: 1%;
+}

@@ -1,5 +1,5 @@
 .form-wrapper {
-    margin-left: 8px;
+    margin-left: 2%;
     display: table;
     flex: 2.5;
 }
@@ -48,4 +48,55 @@
 
 canvas {
     cursor: crosshair;
+    height: 100%;
+}
+
+
+@media screen and (max-width: 1176px) and (min-width: 747px){
+    .button-wrapper {
+        margin-left: 5vh;
+    }
+}
+
+@media screen and (max-width: 747px) {
+    .main-wrapper {
+        flex-flow: column nowrap;
+    }
+
+    .button-wrapper {
+        margin: 0
+        /*margin-left: 5%;*/
+    }
+
+    .form-wrapper {
+        margin: 0
+        /*margin-right: 5%;*/
+    }
+
+    .coordinates-wrapper {
+        width: 100%;
+        margin-top: 5%;
+       /* margin-left: 5%;*/
+        /*margin-right: 5%;*/
+    }
+}
+
+@media screen and (max-width: 350px) {
+    .coordinates-wrapper {
+        flex-flow: column nowrap;
+    }
+
+    .button-wrapper {
+        width: 80%;
+        margin: 5% auto
+    }
+
+    .button-elem {
+        margin: 5% auto
+    }
+
+    canvas {
+        width: 100%
+    }
+
 }

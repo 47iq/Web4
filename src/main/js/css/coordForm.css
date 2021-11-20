@@ -31,3 +31,19 @@
 .coordinates-wrapper .error-text+.error-text {
     margin-left: 5%;
 }
+
+@media screen and (max-width: 1176px){
+    .error-text+.error-text {
+        display: none
+    }
+}
+
+@media screen and (max-width: 747px) {
+    .nums-field, .has-error {
+        border: none
+    }
+
+    input[type=text] {
+        text-align: center;
+    }
+}
