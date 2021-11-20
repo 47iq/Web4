@@ -5,8 +5,8 @@ import "../../css/main.css"
 import Graph from "./graph";
 import {getAll, refresh} from "../../api/request";
 import Header from "../header";
-import storage from "../../app/storage";
 import {drawCanvas} from "../../app/canvas";
+import store from "../../app/store";
 
 class Main extends Component {
 
@@ -17,13 +17,15 @@ class Main extends Component {
             x_form: '',
             y_form: '',
             r_form: '',
-            checks: null,
             refreshAttempted: false
         }
     }
 
     componentDidMount() {
-        if (this.state.checks === null) {
+        store.subscribe(() => {
+            this.setState({reduxState: store.getState()});
+        })
+        if (store.getState().checks === null) {
             this.getChecks()
         }
     }
@@ -33,9 +35,8 @@ class Main extends Component {
             .then(response => {
                 if (response.ok) {
                     response.text().then(text => {
-                        console.log(JSON.parse(text));
-                        this.setChecks(JSON.parse(text))
-                        drawCanvas(document.getElementById("canvas"), this.state.r_form, this.state.checks)
+                        store.dispatch({type: "setChecks", value: JSON.parse(text)})
+                        drawCanvas(document.getElementById("canvas"), this.state.r_form, store.getState().checks)
                     })
                 } else {
                     this.tryToRefresh(this.getChecks, response)
@@ -53,13 +54,13 @@ class Main extends Component {
                         func()
                     } else {
                         console.log(`Response: ${response.json()}`)
-                        storage.dispatch({type: "changeLogin", value: null});
+                        store.dispatch({type: "changeLogin", value: null});
                     }
                 }))
             } else {
                 //todo
                 console.log("Shit happens")
-                storage.dispatch({type: "changeLogin", value: null});
+                store.dispatch({type: "changeLogin", value: null});
             }
         })
     }
@@ -79,24 +80,20 @@ class Main extends Component {
     setX = (x) => this.setState({x_form: x});
     setY = (y) => this.setState({y_form: y});
     setR = (r) => this.setState({r_form: r});
-    setChecks = (checks) => this.setState({checks: checks});
 
     render() {
         return (
-
             <div id="main">
                 <Header login={true}/>
                 <div className={"main-wrapper"}>
-                    <Graph r={this.state.r_form} setChecks={this.setChecks} checks={this.state.checks}/>
+                    <Graph r={this.state.r_form} />
                     <CoordinatesForm validate={this.validate} x_form={this.state.x_form} y_form={this.state.y_form}
                                      r_form={this.state.r_form}
-                                     setX={this.setX} setY={this.setY}
-                                     setR={this.setR} setChecks={this.setChecks} checks={this.state.checks}
-                                     displayError={this.displayError} addToTable={this.addToTable}
-                                     tryToRefresh={this.tryToRefresh} getChecks={this.getChecks}
-                                     refreshAttempted={this.state.refreshAttempted}/>
+                                     getChecks={this.getChecks} setX={this.setX} setY={this.setY}
+                                     setR={this.setR} displayError={this.displayError} addToTable={this.addToTable}
+                                     tryToRefresh={this.tryToRefresh} />
                 </div>
-                <Table checks={this.state.checks} coordinateX={"X"} coordinateY={"Y"} radius={"R"} hit={"Hit"}/>
+                <Table  coordinateX={"X"} coordinateY={"Y"} radius={"R"} hit={"Hit"}/>
             </div>)
     }
 

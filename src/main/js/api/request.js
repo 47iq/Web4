@@ -1,8 +1,3 @@
-import storage from "../app/storage";
-import store from "../app/storage";
-
-const client = require('../client'); // <3>
-
 export function register(login, password) {
     return getResponse('/api/users/register', {username: login, password: password, roles: []}, 'POST', false)
 }

@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import store from "../../app/storage";
+import store from "../../app/store";
 import '../../css/login.css'
 import {login, register} from "../../api/request";
 import FormErrors from "../errors";

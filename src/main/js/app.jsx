@@ -2,11 +2,12 @@ import React, {Component} from 'react';
 import Main from "./components/main/main";
 import './css/app.css'
 import Login from "./components/auth/loginForm";
+import store from "./app/store";
 
 class App extends Component {
     componentDidMount() {
-        this.props.store.subscribe(() => {
-            this.setState({reduxState: this.props.store.getState()});
+        store.subscribe(() => {
+            this.setState({reduxState: store.getState()});
         })
     }
 
@@ -17,7 +18,7 @@ class App extends Component {
     render() {
         return (
             <div className="first-page">
-                {this.props.store.getState().login && this.props.store.getState().login !== "null" ? <Main/> : <Login/>}
+                {store.getState().login && store.getState().login !== "null" ? <Main/> : <Login/>}
             </div>
         )
     }

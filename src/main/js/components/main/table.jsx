@@ -2,6 +2,7 @@ import React, {Component} from "react";
 import {getAll} from "../../api/request";
 
 import '../../css/table.css';
+import store from "../../app/store";
 
 class Table extends Component {
 
@@ -11,12 +12,9 @@ class Table extends Component {
     }
 
     componentDidMount() {
-        getAll()
-            .then(function (response) {
-                return response.json();
-            })
-            .then(items => this.setState({data: items}));
-        console.log(this.state.data)
+        store.subscribe(() => {
+            this.setState({reduxState: store.getState()});
+        })
     }
 
     onSort(event, sortKey) {
@@ -27,33 +25,31 @@ class Table extends Component {
 
 
     render() {
-        let newdata = this.state.data;
-        let {coordinateX, coordinateY, radius, hit} = this.props;
         return (
             <div className={"table-wrapper"}>
                 <table className="table is-bordered is-hoverable is-fullwidth has-text-centered">
                     <thead>
                     <tr>
                         <th onClick={e => this.onSort(e, 'coordinateX')}>
-                            {coordinateX}
+                            {this.props.coordinateX}
                             <i className="fas fa-sort"/>
                         </th>
                         <th onClick={e => this.onSort(e, 'coordinateY')}>
-                            {coordinateY}
+                            {this.props.coordinateY}
                             <i className="fas fa-sort"/>
                         </th>
                         <th onClick={e => this.onSort(e, 'radius')}>
-                            {radius}
+                            {this.props.radius}
                             <i className="fas fa-sort"/>
                         </th>
                         <th onClick={e => this.onSort(e, 'hit')}>
-                            {hit}
+                            {this.props.hit}
                             <i className="fas fa-sort"/>
                         </th>
                     </tr>
                     </thead>
                     <tbody>
-                    {(newdata) ? newdata.map(function (check) {
+                    {(store.getState().checks) ? store.getState().checks.map(function (check) {
                         return (
                             <tr>
                                 <td>{check.coordinateX}</td>

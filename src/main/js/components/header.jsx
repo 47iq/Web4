@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 import '../css/headerStyle.css'
-import storage from "../app/storage";
+import store from "../app/store";
 
 class Header extends Component {
 
@@ -10,8 +10,8 @@ class Header extends Component {
 
     logout = e => {
         sessionStorage.setItem("token", null)
-        storage.dispatch({type: "changeLogin", value: null});
-        console.log(storage.getState().login)
+        store.dispatch({type: "changeLogin", value: null});
+        console.log(store.getState().login)
     }
 
     render() {

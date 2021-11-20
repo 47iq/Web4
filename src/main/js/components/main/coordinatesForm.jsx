@@ -3,6 +3,7 @@ import {clearCanvas, drawCanvas, drawPoint} from "../../app/canvas";
 import FormErrors from "../errors";
 import '../../css/coordForm.css'
 import {check, clear} from "../../api/request";
+import store from "../../app/store";
 
 class CoordinatesForm extends Component {
     constructor(props) {
@@ -20,9 +21,9 @@ class CoordinatesForm extends Component {
     }
 
     componentDidMount() {
-        //todo
-        /*this.props.setR(2)
-        drawCanvas(document.getElementById("canvas"), 2, this.props.checks)*/
+        store.subscribe(() => {
+            this.setState({reduxState: store.getState()});
+        })
     }
 
     submit = () => {
@@ -35,9 +36,11 @@ class CoordinatesForm extends Component {
             check(information)
                 .then(response => {
                     if (response.ok) {
-                        this.setState({refreshAttempted: false})
-                        this.props.addToTable(information)
-                        drawPoint(information, document.getElementById("canvas"), this.props.r_form)
+                        response.text().then(text => {
+                            this.setState({refreshAttempted: false})
+                            store.dispatch({type: "appendCheck", value: JSON.parse(text)})
+                            drawPoint(information, document.getElementById("canvas"), this.props.r_form)
+                        })
                     } else {
                         this.props.tryToRefresh(this.submit, response)
                     }
@@ -49,7 +52,6 @@ class CoordinatesForm extends Component {
         clear().then(response => {
             if (response.ok) {
                 this.props.getChecks()
-                drawCanvas(document.getElementById("canvas"), this.props.r_form, this.props.checks)
                 this.setState({refreshAttempted: false})
             } else {
                 this.props.tryToRefresh(this.clear, response)
@@ -85,10 +87,10 @@ class CoordinatesForm extends Component {
                 fieldValidationErrors.r = rValid ? '' : ' must be in range (0; 3)';
                 if (rValid) {
                     this.props.setR(e.target.value)
-                    drawCanvas(document.getElementById("canvas"), e.target.value, this.props.checks)
+                    drawCanvas(document.getElementById("canvas"), e.target.value, store.getState().checks)
                 } else {
                     this.props.setR(e.target.value)
-                    clearCanvas(this.props.checks, document.getElementById("canvas"), this.props.r_form)
+                    clearCanvas(store.getState().checks, document.getElementById("canvas"), this.props.r_form)
                 }
                 break;
             default:
