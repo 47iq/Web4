@@ -1,0 +1,46 @@
+@import url('https://fonts.googleapis.com/css2?family=M+PLUS+1:wght@200;400&display=swap');
+
+* {
+    /*font-family: "MuseoModerno", cursive;*/
+    font-family: 'M PLUS 1', sans-serif;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    /*background-image: url(./image.png);*/
+    background-color: #1a1a1a;
+}
+
+input[type=text], input[type=password] {
+    background-color: #1a1a1a;
+    color: white;
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 2px solid white;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+form {
+    text-align: center;
+}
+
+button {
+    cursor: pointer;
+    transition-duration: 0.6s;
+    background-color: white;
+    color: black;
+    border: 2px solid black;
+    border-radius: 5px;
+    padding: 14px 35px;
+    font-size: 100%;
+}
+
+button:hover {
+    background-color: #1a1a1a;
+    color: white;
+    border-color: white;
+}

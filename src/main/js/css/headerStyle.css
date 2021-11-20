@@ -1,0 +1,47 @@
+header {
+    margin: 0;
+    padding: 0;
+}
+
+.header {
+    height: 100px;
+    width: 100%;
+    display: flex;
+    background-color: black;
+    justify-content: space-between;
+    box-shadow: 0 0 20px 5px darkblue;
+}
+
+/* Всё что справа:*/
+
+.header .lab-name{
+    color: whitesmoke;
+    /*font-size: 2.2vw;*/
+    font-weight: bold;
+    /*margin-top: 10px;*/
+}
+
+/* Всё что слева:*/
+
+.header > div {
+    display: flex;
+    align-items: center;
+    margin: 10px 20px auto;
+    flex-direction: column;
+}
+
+.header span{
+    color: white;
+    font-weight: bold;
+    margin: auto;
+    font-size: x-large;
+    text-decoration: none;
+}
+
+.header-button-wrapper {
+    display: flex;
+}
+
+.logout {
+    margin-top: 10%;
+}

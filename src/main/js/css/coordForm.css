@@ -1,0 +1,33 @@
+.has-error {
+    background-color: #1a1a1a;
+    color: red;
+    border: 5px outset red;
+}
+
+.nums-field {
+    background-color: #1a1a1a;
+    color: white;
+    border: 5px outset rgba(0, 0, 255, 0.68);
+}
+
+.form-group {
+    margin: auto;
+    padding: 8px;
+    border-radius: 10px;
+    text-align: center;
+    width: fit-content;
+}
+
+
+:not(form)+.form-group{
+    margin-top: 5vh;
+}
+
+.error-text {
+    color: red;
+    font-weight: bold;
+}
+
+.coordinates-wrapper .error-text+.error-text {
+    margin-left: 5%;
+}

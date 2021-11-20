@@ -1,0 +1,82 @@
+.login-form-wrapper {
+    color: white;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+}
+
+
+.login-form *{
+    transition-duration: 0.6s;
+}
+
+.login-form button{
+    transition-duration: 0.3s;
+}
+
+
+.login-form {
+    margin: 2% 10% 10%;
+    padding: 2%;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    height: 100%;
+}
+
+.login-form input {
+    text-align: center;
+}
+
+.login-form .login-error {
+    border-color: red;
+}
+
+.login-form input.login-error{
+    /*color: red;*/
+}
+
+.login-form .error-text {
+    margin-top: 7%;
+}
+
+.login-form .form-errors {
+    display: block;
+}
+
+.login-form>div {
+    flex: 1;
+    justify-content: center;
+}
+
+.log-field {
+    margin-top: 5%;
+    font-size: larger;
+}
+
+.log-field label+label {
+    margin-top: 5%;
+    font-size: 120%;
+}
+
+
+.log-field input{
+    font-size: 150%;
+}
+
+.login-buttons {
+    margin-top: 5%;
+}
+
+.login-buttons button{
+    padding: 2% 4%;
+}
+
+.login-buttons button+button{
+    margin-left: 10%;
+}
+
+#username, #password {
+    width: 50%;
+    margin-top: 2%;
+}
