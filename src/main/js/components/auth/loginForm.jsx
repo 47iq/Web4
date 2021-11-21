@@ -8,26 +8,41 @@ import Header from "../header";
 class Login extends Component {
 
     signIn = e => {
-        login(this.state.username, this.state.password).then(response => response.json().then(json => {
-            if (response.ok) {
-                console.log(json)
-                sessionStorage.setItem("token", json.accessToken)
-                sessionStorage.setItem("refreshToken", json.refreshToken)
-                store.dispatch({type: "changeLogin", value: "true"});
-            } else {
-                this.state.formErrors.other = json.message;
-            }
-        }))
+        if (this.state.usernameValid && this.state.passwordValid)
+            login(this.state.username, this.state.password).then(response => response.json().then(json => {
+                if (response.ok) {
+                    console.log(json)
+                    sessionStorage.setItem("token", json.accessToken)
+                    sessionStorage.setItem("refreshToken", json.refreshToken)
+                    store.dispatch({type: "changeLogin", value: "true"});
+                } else {
+                    store.dispatch({type: "addError", value: {name: "important", value: json.message}});
+                    setTimeout(() => store.dispatch({type: "removeError", value: "important"}), 3000)
+                }
+            }))
+        else {
+            store.dispatch({
+                type: "addError",
+                value: {name: "important", value: "Can't sign in while data is invalid"}
+            });
+            setTimeout(() => store.dispatch({type: "removeError", value: "important"}), 3000)
+        }
     }
 
     signUp = e => {
-        register(this.state.username, this.state.password).then(response => response.json().then(json => {
-            if (response.ok) {
-                this.signIn(e)
-            } else {
-                this.state.formErrors.other = json.message;
-            }
-        }))
+        if (this.state.usernameValid && this.state.passwordValid)
+            register(this.state.username, this.state.password).then(response => response.json().then(json => {
+                if (response.ok) {
+                    this.signIn(e)
+                } else {
+                    store.dispatch({type: "addError", value: {name: "important", value: json.message}});
+                    setTimeout(() => store.dispatch({type: "removeError", value: "important"}), 3000)
+                }
+            }))
+        else {
+            store.dispatch({type: "addError", value: {name: "important", value: "Can't sign up while data is invalid"}});
+            setTimeout(() => store.dispatch({type: "removeError", value: "important"}), 3000)
+        }
     }
 
     constructor(props) {
@@ -37,11 +52,6 @@ class Login extends Component {
             password: "",
             loginValid: true,
             passwordValid: true,
-            formErrors: {
-                username: '',
-                password: '',
-                other: ''
-            },
         }
         this.signIn = this.signIn.bind(this)
         this.signUp = this.signUp.bind(this)
@@ -54,22 +64,30 @@ class Login extends Component {
     }
 
     validateField(fieldName, value, e) {
-        let fieldValidationErrors = this.state.formErrors;
         let usernameValid = this.state.usernameValid;
         let passwordValid = this.state.passwordValid;
 
         switch (fieldName) {
             case 'password':
                 passwordValid = value != null && value.length > 5
-                fieldValidationErrors.password = passwordValid ? '' : ' must contain at least 6 characters';
+                store.dispatch({
+                    type: "addError",
+                    value: {name: "password", value: passwordValid ? '' : ' must contain at least 6 characters'}
+                });
                 this.setState({password: e.target.value})
                 break;
             case 'username':
                 usernameValid = value != null && value.length > 3
-                fieldValidationErrors.username = usernameValid ? '' : ' must contain at least 4 characters';
+                store.dispatch({
+                    type: "addError",
+                    value: {name: "username", value: usernameValid ? '' : ' must contain at least 4 characters'}
+                });
                 if (usernameValid) {
                     usernameValid = value != null && value.match(/^[a-zA-Z]+/)
-                    fieldValidationErrors.username = usernameValid ? '' : ' must start with a letter';
+                    store.dispatch({
+                        type: "addError",
+                        value: {name: "username", value: usernameValid ? '' : ' must start with a letter'}
+                    });
                 }
                 this.setState({username: e.target.value})
                 break;
@@ -77,7 +95,6 @@ class Login extends Component {
                 break;
         }
         this.setState({
-            formErrors: fieldValidationErrors,
             passwordValid: passwordValid,
             usernameValid: usernameValid
         }, this.validateForm);
@@ -99,15 +116,16 @@ class Login extends Component {
                     <form className={`login-form`}>
                         <div className={"log-field"}>
                             <label
-                                className={`${this.errorClass(this.state.formErrors.username)}`}>Username </label><br/>
-                            <input className={`${this.errorClass(this.state.formErrors.username)}`} type="text"
+                                className={`${this.errorClass(store.getState().formErrors.username)}`}>Username </label><br/>
+                            <input className={`${this.errorClass(store.getState().formErrors.username)}`} type="text"
                                    name={"username"} id="username" value={this.state.username}
-                                   onChange={(e) => this.handleUserInput(e)} maxLength={10}/>
+                                   onChange={(e) => this.handleUserInput(e)} maxLength={12}/>
                         </div>
                         <div className="log-field">
                             <label
-                                className={`${this.errorClass(this.state.formErrors.password)}`}>Password </label><br/>
-                            <input className={`${this.errorClass(this.state.formErrors.password)}`} type="password"
+                                className={`${this.errorClass(store.getState().formErrors.password)}`}>Password </label><br/>
+                            <input className={`${this.errorClass(store.getState().formErrors.password)}`}
+                                   type="password"
                                    name={"password"} id="password" value={this.state.password}
                                    onChange={(e) => this.handleUserInput(e)} maxLength={20}/>
                         </div>
@@ -115,7 +133,7 @@ class Login extends Component {
                             <button className="button" type="button" onClick={this.signUp}>Sign Up</button>
                             <button className="button" type="button" onClick={this.signIn}>Log In</button>
                         </div>
-                        <FormErrors formErrors={this.state.formErrors}/>
+                        <FormErrors/>
                     </form>
                 </div>
             </div>

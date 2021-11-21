@@ -23,6 +23,10 @@
     margin-top: 5vh;
 }
 
+.main-wrapper .error-text+.error-text {
+    display: none
+}
+
 .error-text {
     color: red;
     font-weight: bold;
@@ -32,15 +36,18 @@
     margin-left: 5%;
 }
 
-@media screen and (max-width: 1176px){
-    .error-text+.error-text {
-        display: none
-    }
-}
-
 @media screen and (max-width: 747px) {
     .nums-field, .has-error {
         border: none
+
+    }
+
+    :not(form)+.form-group {
+        margin-top: 0;
+    }
+
+    .form-group {
+        padding: 0;
     }
 
     input[type=text] {

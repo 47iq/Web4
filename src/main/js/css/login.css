@@ -74,6 +74,10 @@
     margin-left: 10%;
 }
 
+.login-form-wrapper .error-text+.error-text {
+    display: none
+}
+
 #username, #password {
     width: 50%;
     margin-top: 2%;

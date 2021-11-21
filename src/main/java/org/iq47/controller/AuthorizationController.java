@@ -14,9 +14,10 @@ import org.iq47.security.userDetails.CustomUserDetails;
 import org.iq47.security.userDetails.UserRole;
 import org.iq47.service.RefreshTokenService;
 import org.iq47.service.UserService;
+import org.iq47.validate.PointValidator;
+import org.iq47.validate.UserValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -40,15 +41,17 @@ public class AuthorizationController {
     private final AuthenticationManager authenticationManager;
     private final UserService userService;
     private final RefreshTokenService refreshTokenService;
+    private final UserValidator userValidator;
 
     private final String TOKEN_TYPE = "Bearer";
 
     @Autowired
-    public AuthorizationController(JwtTokenService jwtTokenService, AuthenticationManager authenticationManager, UserService userService, RefreshTokenService refreshTokenService) {
+    public AuthorizationController(JwtTokenService jwtTokenService, AuthenticationManager authenticationManager, UserService userService, RefreshTokenService refreshTokenService, PointValidator pointValidator, UserValidator userValidator) {
         this.authService = jwtTokenService;
         this.authenticationManager = authenticationManager;
         this.userService = userService;
         this.refreshTokenService = refreshTokenService;
+        this.userValidator = userValidator;
     }
 
     @PostMapping(value = "/login")
@@ -95,21 +98,12 @@ public class AuthorizationController {
             if (userService.userExistByName(req.getUsername())) {
                 throw new InvalidRequestException(String.format("User with username '%s' already exists", req.getUsername()));
             }
-
+            Optional<String> message = userValidator.getErrorMessage(req);
+            if (message.isPresent()) {
+                throw new InvalidRequestException(message.get());
+            }
             UserDTO userDto = new UserDTO(req.getUsername(), req.getPassword());
             Set<UserRole> roleSet = new HashSet<>();
-
-            List<String> strRoles = new ArrayList<>();
-            /*List<String> strRoles = req.getRoles();
-            if (strRoles == null || !strRoles.contains(UserRole.ROLE_USER.getAuthority())) {
-                roleSet.add(UserRole.ROLE_USER);
-            } else {
-                strRoles.forEach(reqRole -> {
-                    if (Arrays.stream(UserRole.values()).anyMatch(userRole -> userRole.getAuthority().equals(reqRole))) {
-                        roleSet.add(UserRole.valueOf(reqRole));
-                    }
-                });
-            }*/
             roleSet.add(UserRole.ROLE_USER);
             userDto.setRoleSet(roleSet);
             return ResponseEntity.status(HttpStatus.CREATED).body(userService.saveUser(userDto));

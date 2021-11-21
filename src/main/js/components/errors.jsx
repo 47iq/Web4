@@ -1,24 +1,36 @@
 import React, {Component} from 'react';
+import store from "../app/store";
 
-class FormErrors extends Component{
+class FormErrors extends Component {
     constructor(props) {
         super(props);
+    }
 
+    componentDidMount() {
+        store.subscribe(() => {
+            this.setState({reduxState: store.getState()});
+        })
     }
 
     render() {
-        return(
+        return (
             <div className={`button-elem form-errors`}>
-            {Object.keys(this.props.formErrors).map((fieldName, i) => {
-                if(this.props.formErrors[fieldName].length > 0){
-                    return (
-                        <p className={"error-text"} key={i}>{fieldName.substr(0, 1).toUpperCase() + fieldName.substr(1)} {this.props.formErrors[fieldName]}!</p>
-                    )
-                } else {
-                    return '';
-                }
-            })}
-        </div>)
+                {store.getState().formErrors.important && store.getState().formErrors.important !== '' ?
+                    <p className={"error-text"}>
+                       {store.getState().formErrors.important}
+                    </p>
+                    :
+                    Object.keys(store.getState().formErrors).map((fieldName, i) => {
+                        if (store.getState().formErrors[fieldName].length > 0) {
+                            return (
+                                <p className={"error-text"}
+                                   key={i}>{fieldName.substr(0, 1).toUpperCase() + fieldName.substr(1)} {store.getState().formErrors[fieldName]}!</p>
+                            )
+                        } else {
+                            return '';
+                        }
+                    })}
+            </div>)
     }
 }
 

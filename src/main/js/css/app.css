@@ -12,7 +12,20 @@ body {
     background-color: #1a1a1a;
 }
 
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active
+{
+    transition-duration: 0s;
+    -webkit-box-shadow: 0 0 0 500px #1a1a1a inset;
+    -webkit-text-stroke-color: white;
+    -webkit-text-fill-color: white;
+    color: white;
+}
+
 input[type=text], input[type=password] {
+    transition-duration: 0s;
     background-color: #1a1a1a;
     color: white;
     width: 100%;

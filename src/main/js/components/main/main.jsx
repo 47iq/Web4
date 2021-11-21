@@ -17,6 +17,7 @@ class Main extends Component {
             x_form: '',
             y_form: '',
             r_form: '',
+            formValid: false,
             refreshAttempted: false
         }
     }
@@ -46,27 +47,55 @@ class Main extends Component {
     }
 
     submit = () => {
-        let information = {
-            "x": this.state.x_form,
-            "y": this.state.y_form,
-            "r": this.state.r_form
-        };
-        this.submitInfo(information)
+        if (!this.state.formValid) {
+            if (this.state.x_form === '')
+                store.dispatch({
+                    type: "addError",
+                    value: {name: "important", value: "Can't submit while X is not set!"}
+                });
+            else if (this.state.y_form === '')
+                store.dispatch({
+                    type: "addError",
+                    value: {name: "important", value: "Can't submit while Y is not set!"}
+                });
+            else if (this.state.r_form === '')
+                store.dispatch({
+                    type: "addError",
+                    value: {name: "important", value: "Can't submit while R is not set!"}
+                });
+            else
+                store.dispatch({
+                    type: "addError",
+                    value: {name: "important", value: "Can't submit while data is invalid!"}
+                });
+            setTimeout(() => store.dispatch({type: "removeError", value: "important"}), 3000)
+        } else {
+            let information = {
+                "x": this.state.x_form,
+                "y": this.state.y_form,
+                "r": this.state.r_form
+            };
+            this.submitInfo(information)
+        }
     }
 
     submitInfo = (information) => {
-        check(information)
-            .then(response => {
-                if (response.ok) {
-                    response.text().then(text => {
-                        this.setState({refreshAttempted: false})
-                        store.dispatch({type: "appendCheck", value: JSON.parse(text)})
-                        drawPoint(information, document.getElementById("canvas"), this.state.r_form)
-                    })
-                } else {
-                    this.tryToRefresh(this.submit, response)
-                }
-            })
+        if (this.state.r_form === '') {
+            store.dispatch({type: "addError", value: {name: "important", value: "Can't submit while R is not set!"}});
+            setTimeout(() => store.dispatch({type: "removeError", value: "important"}), 3000)
+        } else
+            check(information)
+                .then(response => {
+                    if (response.ok) {
+                        response.text().then(text => {
+                            this.setState({refreshAttempted: false})
+                            store.dispatch({type: "appendCheck", value: JSON.parse(text)})
+                            drawPoint(information, document.getElementById("canvas"), this.state.r_form)
+                        })
+                    } else {
+                        this.tryToRefresh(this.submit, response)
+                    }
+                })
     }
 
     tryToRefresh = (func, response) => {
@@ -78,14 +107,19 @@ class Main extends Component {
                         sessionStorage.setItem("refreshToken", json.refreshToken)
                         func()
                     } else {
-                        console.log(`Response: ${response.json()}`)
-                        store.dispatch({type: "changeLogin", value: null});
+                        store.dispatch({type: "addError", value: {name: "important", value: json.message}});
+                        setTimeout(() => {
+                            store.dispatch({type: "removeError", value: "important"})
+                            store.dispatch({type: "changeLogin", value: null})
+                        }, 3000)
                     }
                 }))
             } else {
-                //todo
-                console.log("Shit happens")
-                store.dispatch({type: "changeLogin", value: null});
+                let json = JSON.parse(text)
+                store.dispatch({type: "addError", value: {name: "important", value: json.message}});
+                setTimeout(() => store.dispatch({type: "removeError", value: "important"}), 3000)
+                /*store.dispatch({type: "addError", value: {name: "important", value: text}})
+                setTimeout(() => store.dispatch({type: "removeError", value: "important"}), 3000)*/
             }
         })
     }
@@ -98,13 +132,10 @@ class Main extends Component {
         return (this.checkNumbers(this.state.x_form, -3, 3) && this.checkNumbers(this.state.y_form, -5, 5) && this.checkNumbers(this.state.r_form, -3, 3));
     }
 
-    addToTable = (information) => {
-
-    }
-
     setX = (x) => this.setState({x_form: x});
     setY = (y) => this.setState({y_form: y});
     setR = (r) => this.setState({r_form: r});
+    setFormValid = (formValid) => this.setState({formValid: formValid})
 
     render() {
         return (
@@ -113,12 +144,12 @@ class Main extends Component {
                 <div className={"main-wrapper"}>
                     <Graph r={this.state.r_form} submitInfo={this.submitInfo}/>
                     <CoordinatesForm validate={this.validate} x_form={this.state.x_form} y_form={this.state.y_form}
-                                     r_form={this.state.r_form}
+                                     r_form={this.state.r_form} formValid={this.state.formValid}
                                      getChecks={this.getChecks} setX={this.setX} setY={this.setY}
-                                     setR={this.setR} displayError={this.displayError} addToTable={this.addToTable}
+                                     setR={this.setR} displayError={this.displayError} setFormValid={this.setFormValid}
                                      tryToRefresh={this.tryToRefresh} submit={this.submit}/>
                 </div>
-                <Table  coordinateX={"X"} coordinateY={"Y"} radius={"R"} hit={"Hit"} ldt={"Time"}/>
+                <Table coordinateX={"X"} coordinateY={"Y"} radius={"R"} hit={"Hit"} ldt={"Time"}/>
             </div>)
     }
 
