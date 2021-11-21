@@ -1,3 +1,6 @@
+import store from "./store";
+import {check} from "../api/request";
+
 const MAX_RADIUS = 3
 
 function xToCanvas(x, w) {
@@ -26,7 +29,7 @@ function drawCanvasPoint(x, y, r, canvas) {
         context.fillStyle = "#5FFF33";
     }
     context.beginPath();
-    context.arc(xToCanvas(x, canvas.width), yToCanvas(y, canvas.height), MAX_RADIUS, 0, 2 * Math.PI);
+    context.arc(xToCanvas(x, canvas.width), yToCanvas(y, canvas.height), 4, 0, 2 * Math.PI);
     context.fill();
     context.stroke();
     context.closePath();
@@ -45,9 +48,6 @@ function isAreaHit(x, y, r) {
     x = parseFloat(x)
     y = parseFloat(y)
     r = parseFloat(r)
-    /*console.log(x <= r)
-    console.log(`First: ${x >= 0 && y <= 0 && y >= -r && x <= r}, Second: ${(x >= 0 && y >= 0 && x * x + y * y <= r/2 * r/2)},
-     Third: ${(x <= 0 && y <= 0 && y >= -r/2 && (y >= (-x - r/2)) && x >= -r/2)}, x: ${x}, y: ${y}, r: ${r}`)*/
     return (x >= 0 && y <= 0 && y >= -r && x <= r) ||
         (x >= 0 && y >= 0 && x * x + y * y <= r/2 * r/2) ||
         (x <= 0 && y <= 0 && y >= -r/2 && (y >= (-x - r/2)) && x >= -r/2)
@@ -80,8 +80,10 @@ function drawAxis(context, w, h, xR, yR) {
     context.strokeText("X", w - 10, h / 2);
 }
 
-export function drawCanvas(canvas, r, checks) {
+export function drawCanvas(canvas) {
     let context = canvas.getContext("2d");
+    let r = store.getState().radius
+    let checks = store.getState().checks
     let w = canvas.width
     let xR = w * 0.4
     let h = canvas.height
@@ -108,7 +110,7 @@ export function drawCanvas(canvas, r, checks) {
     drawChecks(checks, canvas, r)
 }
 
-export function clearCanvas(checks, canvas, r) {
+export function clearCanvas(canvas) {
     let context = canvas.getContext("2d");
     let w = canvas.width
     let xR = w * 0.4
@@ -117,15 +119,29 @@ export function clearCanvas(checks, canvas, r) {
     context.fillStyle = "#1a1a1a"
     context.fillRect(0, 0, w, h)
     drawAxis(context, w, h, xR, yR)
-    drawChecks(checks, canvas, 0)
+    drawChecks(store.getState().checks, canvas, 0)
 }
 
-export function clicked(event) {
-
+export function clicked(event, submitInfo) {
+    const canvas = document.querySelector('canvas')
+    const rect = canvas.getBoundingClientRect()
+    const clickX = event.clientX - rect.left
+    const clickY = event.clientY - rect.top
+    let r = store.getState().radius
+    let x = canvasToX(clickX, canvas.width)
+    let y = canvasToY(clickY, canvas.height)
+    let information = {
+        x: x,
+        y: y,
+        r: r
+    };
+    //todo
+    console.log(canvas)
+    submitInfo(information)
 }
 
-export function drawPoint(information, canvas, r) {
+export function drawPoint(information, canvas) {
     let x = information.x
     let y = information.y
-    drawCanvasPoint(x, y, r, canvas)
+    drawCanvasPoint(x, y, store.getState().radius, canvas)
 }

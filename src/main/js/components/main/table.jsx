@@ -20,6 +20,7 @@ class Table extends Component {
         const data = this.state.data;
         data.sort((a, b) => a[sortKey].localeCompare(b[sortKey]))
         this.setState({data})
+        /* onClick={e => this.onSort(e, 'hit')}*/
     }
 
 
@@ -29,40 +30,38 @@ class Table extends Component {
                 <table className="table is-bordered is-hoverable is-fullwidth has-text-centered">
                     <thead>
                     <tr>
-                        <th onClick={e => this.onSort(e, 'coordinateX')}>
+                        <th>
                             {this.props.coordinateX}
-                            <i className="fas fa-sort"/>
                         </th>
-                        <th onClick={e => this.onSort(e, 'coordinateY')}>
+                        <th>
                             {this.props.coordinateY}
-                            <i className="fas fa-sort"/>
                         </th>
-                        <th onClick={e => this.onSort(e, 'radius')}>
+                        <th>
                             {this.props.radius}
-                            <i className="fas fa-sort"/>
                         </th>
-                        <th onClick={e => this.onSort(e, 'hit')}>
+                        <th>
                             {this.props.hit}
-                            <i className="fas fa-sort"/>
                         </th>
-                        <th onClick={e => this.onSort(e, 'ldt')}>
+                        <th>
                             {this.props.ldt}
-                            <i className="fas fa-sort"/>
                         </th>
                     </tr>
                     </thead>
                     <tbody>
                     {(store.getState().checks) ? store.getState().checks.map(function (check) {
-                        return (
-                            <tr>
-                                <td>{check.coordinateX}</td>
-                                <td>{check.coordinateY}</td>
-                                <td>{check.radius}</td>
-                                <td>{check.hit.toString()}</td>
-                                <td>{check.time.toString()}</td>
-                            </tr>
-                        );
-                    }) : ''}
+                            return (
+                                <tr key={check.pointId}>
+                                    <td>{Math.round((check.coordinateX + Number.EPSILON) * 100) / 100}</td>
+                                    <td>{Math.round((check.coordinateY + Number.EPSILON) * 100) / 100}</td>
+                                    <td>{Math.round((check.radius + Number.EPSILON) * 100) / 100}</td>
+                                    <td>{check.hit.toString()}</td>
+                                    <td>{check.time.toString()}</td>
+                                </tr>
+                            );
+                        }) :
+                        <tr>
+                            <td colSpan={5}>No info</td>
+                        </tr>}
                     </tbody>
                 </table>
             </div>)

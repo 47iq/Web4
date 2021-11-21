@@ -15,6 +15,9 @@ function reducer(state, action) {
         case "appendCheck":
             state.checks.push(action.value)
             return state;
+        case "changeRadius":
+            state.radius = action.value
+            return state
         case "setChecks":
             sessionStorage.setItem("checks", action.value)
             state.checks = action.value

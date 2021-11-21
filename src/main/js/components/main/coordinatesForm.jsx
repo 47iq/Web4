@@ -26,28 +26,6 @@ class CoordinatesForm extends Component {
         })
     }
 
-    submit = () => {
-        let information = {
-            "x": this.props.x_form,
-            "y": this.props.y_form,
-            "r": this.props.r_form
-        };
-        if (this.props.validate()) {
-            check(information)
-                .then(response => {
-                    if (response.ok) {
-                        response.text().then(text => {
-                            this.setState({refreshAttempted: false})
-                            store.dispatch({type: "appendCheck", value: JSON.parse(text)})
-                            drawPoint(information, document.getElementById("canvas"), this.props.r_form)
-                        })
-                    } else {
-                        this.props.tryToRefresh(this.submit, response)
-                    }
-                })
-        }
-    }
-
     clear = () => {
         clear().then(response => {
             if (response.ok) {
@@ -87,10 +65,12 @@ class CoordinatesForm extends Component {
                 fieldValidationErrors.r = rValid ? '' : ' must be in range (0; 3)';
                 if (rValid) {
                     this.props.setR(e.target.value)
-                    drawCanvas(document.getElementById("canvas"), e.target.value, store.getState().checks)
+                    store.dispatch({type: "changeRadius", value: e.target.value})
+                    drawCanvas(document.getElementById("canvas"))
                 } else {
                     this.props.setR(e.target.value)
-                    clearCanvas(store.getState().checks, document.getElementById("canvas"), this.props.r_form)
+                    store.dispatch({type: "changeRadius", value: null})
+                    clearCanvas(document.getElementById("canvas"))
                 }
                 break;
             default:
@@ -144,7 +124,7 @@ class CoordinatesForm extends Component {
                 <div
                     className={`button-wrapper ${this.errorClass(this.state.formErrors.r + this.state.formErrors.y + this.state.formErrors.x)}`}>
                     <div className={`button-elem`}>
-                        <button type="button" onClick={this.submit}>Submit</button>
+                        <button type="button" onClick={this.props.submit}>Submit</button>
                     </div>
                     <div className={"button-elem"}>
                         <button type="button" onClick={this.clear}>Clear</button>

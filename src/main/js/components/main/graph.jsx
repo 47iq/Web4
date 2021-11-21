@@ -12,10 +12,6 @@ class Graph extends Component {
     }
 
     componentDidMount() {
-        //todo
-        /* console.log(this.props.checks)
-         drawCanvas(this.state.canvas.current, this.props.r, this.props.checks)
-         width={350} height={350} */
         store.subscribe(() => {
             this.setState({reduxState: store.getState()});
         })
@@ -26,7 +22,7 @@ class Graph extends Component {
         return (
             <div className={"canvas-wrapper"}>
                 <canvas width={350} height={350} id="canvas" ref={this.state.canvas} onClick={(e) => {
-                    clicked(e, this.props.r, store.getState().checks)
+                    clicked(e, this.props.submitInfo)
                 }}/>
             </div>
         )

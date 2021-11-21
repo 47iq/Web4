@@ -3,9 +3,9 @@ import CoordinatesForm from "./coordinatesForm";
 import Table from "./table";
 import "../../css/main.css"
 import Graph from "./graph";
-import {getAll, refresh} from "../../api/request";
+import {check, getAll, refresh} from "../../api/request";
 import Header from "../header";
-import {drawCanvas} from "../../app/canvas";
+import {drawCanvas, drawPoint} from "../../app/canvas";
 import store from "../../app/store";
 
 class Main extends Component {
@@ -37,10 +37,34 @@ class Main extends Component {
                     response.text().then(text => {
                         store.dispatch({type: "setChecks", value: JSON.parse(text)})
                         console.log(JSON.parse(text))
-                        drawCanvas(document.getElementById("canvas"), this.state.r_form, store.getState().checks)
+                        drawCanvas(document.getElementById("canvas"))
                     })
                 } else {
                     this.tryToRefresh(this.getChecks, response)
+                }
+            })
+    }
+
+    submit = () => {
+        let information = {
+            "x": this.state.x_form,
+            "y": this.state.y_form,
+            "r": this.state.r_form
+        };
+        this.submitInfo(information)
+    }
+
+    submitInfo = (information) => {
+        check(information)
+            .then(response => {
+                if (response.ok) {
+                    response.text().then(text => {
+                        this.setState({refreshAttempted: false})
+                        store.dispatch({type: "appendCheck", value: JSON.parse(text)})
+                        drawPoint(information, document.getElementById("canvas"), this.state.r_form)
+                    })
+                } else {
+                    this.tryToRefresh(this.submit, response)
                 }
             })
     }
@@ -87,12 +111,12 @@ class Main extends Component {
             <div id="main">
                 <Header login={true}/>
                 <div className={"main-wrapper"}>
-                    <Graph r={this.state.r_form} />
+                    <Graph r={this.state.r_form} submitInfo={this.submitInfo}/>
                     <CoordinatesForm validate={this.validate} x_form={this.state.x_form} y_form={this.state.y_form}
                                      r_form={this.state.r_form}
                                      getChecks={this.getChecks} setX={this.setX} setY={this.setY}
                                      setR={this.setR} displayError={this.displayError} addToTable={this.addToTable}
-                                     tryToRefresh={this.tryToRefresh} />
+                                     tryToRefresh={this.tryToRefresh} submit={this.submit}/>
                 </div>
                 <Table  coordinateX={"X"} coordinateY={"Y"} radius={"R"} hit={"Hit"} ldt={"Time"}/>
             </div>)

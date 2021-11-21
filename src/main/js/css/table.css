@@ -45,3 +45,9 @@ table {
     display: flex;
     margin-bottom: 5%;
 }
+
+@media screen and (max-width: 747px) {
+    table * {
+        font-size: small;
+    }
+}
