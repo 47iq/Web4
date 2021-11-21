@@ -10,6 +10,7 @@ function reducer(state, action) {
         case "changeLogin":
             sessionStorage.setItem("login", action.value)
             state.login = action.value
+            state.checks = null
             return state;
         case "appendCheck":
             state.checks.push(action.value)

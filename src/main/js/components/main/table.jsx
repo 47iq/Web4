@@ -1,5 +1,4 @@
 import React, {Component} from "react";
-import {getAll} from "../../api/request";
 
 import '../../css/table.css';
 import store from "../../app/store";
@@ -8,7 +7,7 @@ class Table extends Component {
 
     constructor(props) {
         super(props);
-        this.state = { data: [] };
+        this.state = {data: []};
     }
 
     componentDidMount() {
@@ -46,6 +45,10 @@ class Table extends Component {
                             {this.props.hit}
                             <i className="fas fa-sort"/>
                         </th>
+                        <th onClick={e => this.onSort(e, 'ldt')}>
+                            {this.props.ldt}
+                            <i className="fas fa-sort"/>
+                        </th>
                     </tr>
                     </thead>
                     <tbody>
@@ -56,6 +59,7 @@ class Table extends Component {
                                 <td>{check.coordinateY}</td>
                                 <td>{check.radius}</td>
                                 <td>{check.hit.toString()}</td>
+                                <td>{check.time.toString()}</td>
                             </tr>
                         );
                     }) : ''}

@@ -20,19 +20,28 @@ tr {
     color: white;
 }
 
+tbody tr:nth-child(odd) {
+
+}
+
+tbody tr:nth-child(even) {
+    background-color: #151515;
+}
+
 table {
     margin-left: 10%;
     margin-right: 10%;
 
     table-layout: fixed;
     width: 100%;
-    /*border: 5px outset rgba(0, 0, 255, 0.68);
+    /*border: 5px outset ;*/
+    padding: 6px;
     border-radius: 20px;
-    padding: 6px;*/
+    border: 5px outset rgba(0, 0, 255, 0.68);
 }
 
 .table-wrapper {
     margin-top: 5%;
     display: flex;
-    margin-bottom: 1%;
+    margin-bottom: 5%;
 }

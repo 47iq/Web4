@@ -64,7 +64,8 @@ canvas {
     }
 
     .button-wrapper {
-        margin: 0
+        margin: 0;
+        flex: 1.5;
         /*margin-left: 5%;*/
     }
 
@@ -81,7 +82,7 @@ canvas {
     }
 }
 
-@media screen and (max-width: 350px) {
+@media screen and (max-width: 450px) {
     .coordinates-wrapper {
         flex-flow: column nowrap;
     }

@@ -117,7 +117,7 @@ export function clearCanvas(checks, canvas, r) {
     context.fillStyle = "#1a1a1a"
     context.fillRect(0, 0, w, h)
     drawAxis(context, w, h, xR, yR)
-    drawChecks(checks, canvas, r)
+    drawChecks(checks, canvas, 0)
 }
 
 export function clicked(event) {

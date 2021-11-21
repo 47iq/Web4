@@ -3,6 +3,7 @@ package org.iq47.network;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
 @Getter
@@ -16,6 +17,7 @@ public class PointDTO {
     private double radius;
     private Boolean hit;
     private LocalDateTime ldt;
+    private String time;
     private Long pointId;
 
     public static Builder newBuilder() {
@@ -62,6 +64,8 @@ public class PointDTO {
 
         public Builder setLocalTime(LocalDateTime ldt) {
             PointDTO.this.ldt = ldt;
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+            time = ldt.format(formatter);
             return this;
         }
 

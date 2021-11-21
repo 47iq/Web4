@@ -36,6 +36,7 @@ class Main extends Component {
                 if (response.ok) {
                     response.text().then(text => {
                         store.dispatch({type: "setChecks", value: JSON.parse(text)})
+                        console.log(JSON.parse(text))
                         drawCanvas(document.getElementById("canvas"), this.state.r_form, store.getState().checks)
                     })
                 } else {
@@ -93,7 +94,7 @@ class Main extends Component {
                                      setR={this.setR} displayError={this.displayError} addToTable={this.addToTable}
                                      tryToRefresh={this.tryToRefresh} />
                 </div>
-                <Table  coordinateX={"X"} coordinateY={"Y"} radius={"R"} hit={"Hit"}/>
+                <Table  coordinateX={"X"} coordinateY={"Y"} radius={"R"} hit={"Hit"} ldt={"Time"}/>
             </div>)
     }
 

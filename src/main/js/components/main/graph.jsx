@@ -23,7 +23,6 @@ class Graph extends Component {
 
 
     render() {
-        console.log(store.getState().checks)
         return (
             <div className={"canvas-wrapper"}>
                 <canvas width={350} height={350} id="canvas" ref={this.state.canvas} onClick={(e) => {
