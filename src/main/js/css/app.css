@@ -22,6 +22,7 @@ input:-webkit-autofill:active
     -webkit-text-stroke-color: white;
     -webkit-text-fill-color: white;
     color: white;
+    caret-color : white;
 }
 
 input[type=text], input[type=password] {

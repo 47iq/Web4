@@ -60,7 +60,7 @@ class Table extends Component {
                             );
                         }) :
                         <tr>
-                            <td colSpan={5}>No info</td>
+                            <td colSpan={5}>Loading...</td>
                         </tr>}
                     </tbody>
                 </table>

@@ -18,7 +18,7 @@ class Header extends Component {
         return (
             <header className={"header"}>
                 <div className={"header-button-wrapper"}>
-                    {this.props.login ? <button className={"logout"} onClick={this.logout}>Logout</button> : ""}
+                    {this.props.login ? <button className={"logout"} onClick={this.logout}>Log Out</button> : ""}
                 </div>
                 <div>
                 <span>

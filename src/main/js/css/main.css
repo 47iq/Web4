@@ -89,12 +89,15 @@ canvas {
 
 @media screen and (max-width: 490px) {
     .coordinates-wrapper {
-        flex-flow: column nowrap;
+        flex-flow: column-reverse nowrap;
     }
 
     .button-wrapper {
         width: 80%;
-        margin: 5% auto
+        margin: 5% auto 0 auto
+    }
+    .button-wrapper .form-errors {
+        min-height: 60px;
     }
 
     .button-elem {
