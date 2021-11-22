@@ -1,19 +1,17 @@
 th {
     cursor: pointer;
-    background-color: rgba(1, 1, 196, 0.68);
+    background-color: rgba(1, 1, 210, 0.68);
     color: white;
 }
 
 th, td {
     overflow: hidden;
-
     width: 100%;
     text-align: center;
 }
 
 th i {
     float: right;
-    margin-top: 5px;
 }
 
 tr {
@@ -21,7 +19,7 @@ tr {
 }
 
 tbody tr:nth-child(odd) {
-
+    background-color: #000000;
 }
 
 tbody tr:nth-child(even) {
@@ -35,9 +33,11 @@ table {
     table-layout: fixed;
     width: 100%;
     /*border: 5px outset ;*/
-    padding: 6px;
+    overflow:hidden;
     border-radius: 20px;
-    border: 5px outset rgba(0, 0, 255, 0.68);
+    /*border: 7px outset rgba(0, 0, 255, 0.68);*/
+
+    border-collapse: collapse;
 }
 
 .table-wrapper {

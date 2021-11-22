@@ -80,7 +80,7 @@ public class JwtTokenServiceImpl implements JwtTokenService{
             Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token);
             return true;
         } catch (JwtException | IllegalArgumentException e) {
-            throw new ProviderException("Expired or invalid JWT token", HttpStatus.BAD_REQUEST);
+            throw new ProviderException("Expired or invalid JWT token", HttpStatus.UNAUTHORIZED);
         }
     }
 

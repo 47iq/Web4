@@ -11,7 +11,6 @@ class Login extends Component {
         if (this.state.usernameValid && this.state.passwordValid)
             login(this.state.username, this.state.password).then(response => response.json().then(json => {
                 if (response.ok) {
-                    console.log(json)
                     sessionStorage.setItem("token", json.accessToken)
                     sessionStorage.setItem("refreshToken", json.refreshToken)
                     store.dispatch({type: "changeLogin", value: "true"});

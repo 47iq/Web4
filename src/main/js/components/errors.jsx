@@ -7,9 +7,15 @@ class FormErrors extends Component {
     }
 
     componentDidMount() {
+        this.mounted = true;
         store.subscribe(() => {
-            this.setState({reduxState: store.getState()});
+            if (this.mounted)
+                this.setState({reduxState: store.getState()});
         })
+    }
+
+    componentWillUnmount() {
+        this.mounted = false;
     }
 
     render() {
@@ -17,7 +23,7 @@ class FormErrors extends Component {
             <div className={`button-elem form-errors`}>
                 {store.getState().formErrors.important && store.getState().formErrors.important !== '' ?
                     <p className={"error-text"}>
-                       {store.getState().formErrors.important}
+                        {store.getState().formErrors.important}
                     </p>
                     :
                     Object.keys(store.getState().formErrors).map((fieldName, i) => {

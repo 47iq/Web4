@@ -58,3 +58,14 @@ button:hover {
     color: white;
     border-color: white;
 }
+
+@media screen and (max-width: 747px) {
+    input[type=text] {
+        text-align: center;
+        border-width: 1px;
+    }
+
+    input[type=text]:focus {
+        outline-width: 0;
+    }
+}

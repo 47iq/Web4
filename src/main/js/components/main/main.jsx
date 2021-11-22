@@ -23,12 +23,18 @@ class Main extends Component {
     }
 
     componentDidMount() {
+        this.mounted = true;
         store.subscribe(() => {
-            this.setState({reduxState: store.getState()});
+            if (this.mounted)
+                this.setState({reduxState: store.getState()});
         })
         if (store.getState().checks === null) {
             this.getChecks()
         }
+    }
+
+    componentWillUnmount() {
+        this.mounted = false;
     }
 
     getChecks = () => {
@@ -37,7 +43,6 @@ class Main extends Component {
                 if (response.ok) {
                     response.text().then(text => {
                         store.dispatch({type: "setChecks", value: JSON.parse(text)})
-                        console.log(JSON.parse(text))
                         drawCanvas(document.getElementById("canvas"))
                     })
                 } else {
@@ -99,8 +104,8 @@ class Main extends Component {
     }
 
     tryToRefresh = (func, response) => {
-        response.text().then(text => {
-            if (text === "Expired or invalid JWT token") {
+        response.json().then(json => {
+            if (json.message === "Expired or invalid JWT token") {
                 refresh().then(response => response.json().then(json => {
                     if (response.ok) {
                         sessionStorage.setItem("token", json.accessToken)
@@ -115,11 +120,8 @@ class Main extends Component {
                     }
                 }))
             } else {
-                let json = JSON.parse(text)
                 store.dispatch({type: "addError", value: {name: "important", value: json.message}});
                 setTimeout(() => store.dispatch({type: "removeError", value: "important"}), 3000)
-                /*store.dispatch({type: "addError", value: {name: "important", value: text}})
-                setTimeout(() => store.dispatch({type: "removeError", value: "important"}), 3000)*/
             }
         })
     }

@@ -22,13 +22,13 @@ public class PointValidatorImpl implements PointValidator {
             return Optional.of("Y must be set");
         if(point.getY().isNaN() || point.getY().isInfinite())
             return Optional.of("Y must be a number");
-        if(point.getY() <= -5 && point.getY() >= 5)
+        if(point.getY() <= -5 || point.getY() >= 5)
             return Optional.of("Y must be in range (-5; 5)");
         if(point.getR() == null)
             return Optional.of("R must be set");
         if(point.getR().isNaN() || point.getR().isInfinite())
             return Optional.of("R must be a number");
-        if(point.getR() <= -3 && point.getR() >= 3)
+        if(point.getR() <= -3 || point.getR() >= 3)
             return Optional.of("R must be in range (-3; 3)");
         return Optional.empty();
     }

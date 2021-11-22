@@ -123,10 +123,10 @@ export function clearCanvas(canvas) {
 }
 
 export function clicked(event, submitInfo) {
-    const canvas = document.querySelector('canvas')
-    const rect = canvas.getBoundingClientRect()
-    const clickX = event.clientX - rect.left
-    const clickY = event.clientY - rect.top
+    let canvas = document.querySelector('canvas')
+    let coords = canvas.relMouseCoords(event);
+    let clickX = coords.x;
+    let clickY = coords.y;
     let r = store.getState().radius
     let x = canvasToX(clickX, canvas.width)
     let y = canvasToY(clickY, canvas.height)
@@ -135,8 +135,6 @@ export function clicked(event, submitInfo) {
         y: y,
         r: r
     };
-    //todo
-    console.log(canvas)
     submitInfo(information)
 }
 

@@ -11,7 +11,6 @@ class Header extends Component {
     logout = e => {
         sessionStorage.setItem("token", null)
         store.dispatch({type: "changeLogin", value: null});
-        console.log(store.getState().login)
     }
 
     render() {

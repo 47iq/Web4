@@ -1,8 +1,8 @@
 import React, {Component} from "react";
-import {clearCanvas, drawCanvas, drawPoint} from "../../app/canvas";
+import {clearCanvas, drawCanvas} from "../../app/canvas";
 import FormErrors from "../errors";
 import '../../css/coordForm.css'
-import {check, clear} from "../../api/request";
+import {clear} from "../../api/request";
 import store from "../../app/store";
 
 class CoordinatesForm extends Component {
@@ -16,20 +16,26 @@ class CoordinatesForm extends Component {
     }
 
     componentDidMount() {
-        console.log(store.getState())
+        this.mounted = true;
         store.subscribe(() => {
-            this.setState({reduxState: store.getState()});
+            if (this.mounted)
+                this.setState({reduxState: store.getState()});
         })
+    }
+
+    componentWillUnmount() {
+        this.mounted = false;
     }
 
     clear = () => {
         clear().then(response => {
-            if (response.ok) {
-                this.props.getChecks()
-                this.setState({refreshAttempted: false})
-            } else {
-                this.props.tryToRefresh(this.clear, response)
-            }
+            if(this.mounted)
+                if (response.ok) {
+                    this.props.getChecks()
+                    this.setState({refreshAttempted: false})
+                } else {
+                    this.props.tryToRefresh(this.clear, response)
+                }
         })
     }
 
@@ -47,12 +53,18 @@ class CoordinatesForm extends Component {
         switch (fieldName) {
             case 'X':
                 xValid = value != null && value !== '' && !isNaN(value) && value < 3 && value > -3
-                store.dispatch({type: "addError", value: {name: "x", value: xValid ? '' : ' must be in range (-3; 3)'}});
+                store.dispatch({
+                    type: "addError",
+                    value: {name: "x", value: xValid ? '' : ' must be in range (-3; 3)'}
+                });
                 this.props.setX(e.target.value)
                 break;
             case 'Y':
                 yValid = value != null && value !== '' && !isNaN(value) && value < 5 && value > -5
-                store.dispatch({type: "addError", value: {name: "y", value: yValid ? '' : ' must be in range (-5; 5)'}});
+                store.dispatch({
+                    type: "addError",
+                    value: {name: "y", value: yValid ? '' : ' must be in range (-5; 5)'}
+                });
                 this.props.setY(e.target.value)
                 break;
             case 'R':
@@ -77,8 +89,6 @@ class CoordinatesForm extends Component {
             rValid: rValid
         })
         this.validateForm(xValid, yValid, rValid)
-        console.log(this.state.xValid + " " + this.state.yValid  + " " +  this.state.rValid)
-        console.log(this.props.formValid)
     }
 
     validateForm(xValid, yValid, rValid) {

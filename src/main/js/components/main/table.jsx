@@ -11,9 +11,15 @@ class Table extends Component {
     }
 
     componentDidMount() {
+        this.mounted = true;
         store.subscribe(() => {
-            this.setState({reduxState: store.getState()});
+            if (this.mounted)
+                this.setState({reduxState: store.getState()});
         })
+    }
+
+    componentWillUnmount() {
+        this.mounted = false;
     }
 
     onSort(event, sortKey) {
@@ -54,7 +60,7 @@ class Table extends Component {
                                     <td>{Math.round((check.coordinateX + Number.EPSILON) * 100) / 100}</td>
                                     <td>{Math.round((check.coordinateY + Number.EPSILON) * 100) / 100}</td>
                                     <td>{Math.round((check.radius + Number.EPSILON) * 100) / 100}</td>
-                                    <td>{check.hit.toString()}</td>
+                                    <td style={{color: check.hit ? 'lime' : 'red'}}>{check.hit.toString()}</td>
                                     <td>{check.time.toString()}</td>
                                 </tr>
                             );

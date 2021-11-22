@@ -1,9 +1,11 @@
 package org.iq47.controller;
 
+import lombok.extern.slf4j.Slf4j;
 import org.iq47.model.entity.RefreshToken;
 import org.iq47.model.entity.User;
 import org.iq47.network.UserDTO;
 import org.iq47.network.request.LoginRequest;
+import org.iq47.network.request.PointCheckRequest;
 import org.iq47.network.request.RefreshRequest;
 import org.iq47.network.request.RegisterRequest;
 import org.iq47.network.response.JwtResponse;
@@ -20,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -35,6 +38,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("api/users")
+@Slf4j
 public class AuthorizationController {
 
     private final JwtTokenService authService;
@@ -55,7 +59,7 @@ public class AuthorizationController {
     }
 
     @PostMapping(value = "/login")
-    public ResponseEntity<?> greeting(@RequestBody LoginRequest req) {
+    public ResponseEntity<?> login(@RequestBody LoginRequest req) {
         try {
             if (req.getUsername() == null || req.getUsername().equals("")) {
                 throw new InvalidRequestException("Invalid request data: username is not set.");
@@ -81,8 +85,10 @@ public class AuthorizationController {
             return ResponseEntity.status(HttpStatus.CREATED).body(new JwtResponse(accessToken, TOKEN_TYPE,
                     refreshTokenOptional.get(), userDetails.getId(), userDetails.getUsername(), roles));
 
-        } catch (InvalidRequestException iRE) {
-            return ResponseEntity.badRequest().body(new ResponseWrapper(iRE.getMessage()));
+        } catch (InvalidRequestException | BadCredentialsException ex) {
+            return ResponseEntity.badRequest().body(new ResponseWrapper(ex.getMessage()));
+        } catch (Exception ex) {
+            return reportError(req, ex);
         }
     }
 
@@ -108,8 +114,10 @@ public class AuthorizationController {
             userDto.setRoleSet(roleSet);
             return ResponseEntity.status(HttpStatus.CREATED).body(userService.saveUser(userDto));
 
-        } catch (InvalidRequestException iRE) {
-            return ResponseEntity.badRequest().body(new ResponseWrapper(iRE.getMessage()));
+        } catch (InvalidRequestException ex) {
+            return ResponseEntity.badRequest().body(new ResponseWrapper(ex.getMessage()));
+        }  catch (Exception ex) {
+            return reportError(req, ex);
         }
     }
 
@@ -132,8 +140,18 @@ public class AuthorizationController {
 
             return ResponseEntity.status(HttpStatus.CREATED).body(new RefreshResponse(accessToken, optionalRToken.get(), TOKEN_TYPE));
 
-        } catch (Exception ex) {
+        } catch (InvalidRequestException ex) {
             return ResponseEntity.badRequest().body(new ResponseWrapper(ex.getMessage()));
+        }  catch (Exception ex) {
+            return reportError(req, ex);
         }
+    }
+
+    private ResponseEntity<ResponseWrapper> reportError(Object req, Exception e) {
+        if(req != null)
+            log.error(String.format("Got %s while processing %s", e.getClass(), req));
+        else
+            log.error(String.format("Got %s while processing request", e.getClass()));
+        return ResponseEntity.internalServerError().body(new ResponseWrapper("Something went wrong"));
     }
 }

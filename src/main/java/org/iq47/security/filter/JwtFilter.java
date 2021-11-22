@@ -1,5 +1,6 @@
 package org.iq47.security.filter;
 
+import net.minidev.json.JSONObject;
 import org.iq47.exception.ProviderException;
 import org.iq47.security.JwtTokenService;
 import org.springframework.security.core.Authentication;
@@ -13,6 +14,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.HashMap;
+import java.util.Map;
 
 public class JwtFilter extends OncePerRequestFilter {
 
@@ -38,15 +41,21 @@ public class JwtFilter extends OncePerRequestFilter {
             res.setStatus(ex.getHttpStatus().value());
             res.setHeader("Content-Type", "text/plain");
             PrintWriter out = res.getWriter();
-            out.write(ex.getMessage());
+            JSONObject object = new JSONObject();
+            object.appendField("message", ex.getMessage());
+            out.write(object.toJSONString());
             return;
-        } catch (UsernameNotFoundException ex) {
+        } catch (Exception ex) {
             // send response
             res.resetBuffer();
-            res.setHeader("Content-Type", "text/plain");
+            res.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            res.setHeader("Content-Type", "application/json");
             PrintWriter out = res.getWriter();
-            out.write(ex.getMessage());
+            JSONObject object = new JSONObject();
+            object.appendField("message", ex.getMessage());
+            out.write(object.toJSONString());
             return;
+            //todo
         }
         filterChain.doFilter(req, res);
     }
