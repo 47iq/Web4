@@ -2,7 +2,7 @@ import React, {Component} from "react";
 import store from "../../app/store";
 import '../../css/login.css'
 import {login, register} from "../../api/request";
-import FormErrors from "../organisms/errors";
+import FormErrors from "../../molecules/errors";
 import Header from "../header";
 
 class Login extends Component {
@@ -132,7 +132,7 @@ class Login extends Component {
                             <button className="button" type="button" onClick={this.signUp}>Sign Up</button>
                             <button className="button" type="button" onClick={this.signIn}>Log In</button>
                         </div>
-                        <FormErrors/>
+                        <FormErrors formErrors={store.getState().formErrors}/>
                     </form>
                 </div>
             </div>

@@ -1,9 +1,10 @@
 import React, {Component} from "react";
 import {clearCanvas, drawCanvas} from "../../app/canvas";
-import FormErrors from "../organisms/errors";
+import FormErrors from "../../molecules/errors";
 import '../../css/coordForm.css'
 import {clear} from "../../api/request";
 import store from "../../app/store";
+import CoordinateInput from "../../atoms/coordinateInput";
 
 class CoordinatesForm extends Component {
     constructor(props) {
@@ -104,35 +105,25 @@ class CoordinatesForm extends Component {
             <div className={"coordinates-wrapper"}>
                 <div className={"form-wrapper"}>
                     <form id="form">
-                        <div className={`form-group ${this.errorClass(store.getState().formErrors.x)}`}>
-                            <label>X </label>
-                            <input type={"text"} name={"X"} value={this.props.x_form} onChange={this.handleUserInput}
-                                   maxLength={10} placeholder="Enter X(-3; 3)"/>
-                            <br/>
-                        </div>
-                        <div className={`form-group ${this.errorClass(store.getState().formErrors.y)}`}>
-                            <label>Y </label>
-                            <input type={"text"} name={"Y"} value={this.props.y_form} onChange={this.handleUserInput}
-                                   maxLength={10} placeholder="Enter Y(-5; 5)"/>
-                            <br/>
-                        </div>
-                        <div className={`form-group ${this.errorClass(store.getState().formErrors.r)}`}>
-                            <label>R </label>
-                            <input type={"text"} name={"R"} value={this.props.r_form} onChange={this.handleUserInput}
-                                   maxLength={10} placeholder="Enter R(-3; 3)"/>
-                            <br/>
-                        </div>
+                        <CoordinateInput name={"X"} errorClass={this.errorClass} formErrors={store.getState().formErrors}
+                                         form={this.props.x_form} placeholder={"Enter X (-3; 3):"} handleUserInput={this.handleUserInput}
+                                         errorElement={store.getState().formErrors.x}/>
+                        <CoordinateInput name={"Y"} errorClass={this.errorClass} formErrors={store.getState().formErrors}
+                                         form={this.props.y_form} placeholder={"Enter Y (-5; 5):"} handleUserInput={this.handleUserInput}
+                                         errorElement={store.getState().formErrors.y}/>
+                        <CoordinateInput name={"R"} errorClass={this.errorClass} formErrors={store.getState().formErrors}
+                                         form={this.props.r_form} placeholder={"Enter R (-3; 3):"} handleUserInput={this.handleUserInput}
+                                         errorElement={store.getState().formErrors.r}/>
                     </form>
                 </div>
-                <div
-                    className={`button-wrapper ${this.errorClass(store.getState().formErrors.r + store.getState().formErrors.y + store.getState().formErrors.x)}`}>
+                <div className={`button-wrapper ${this.errorClass(store.getState().formErrors.r + store.getState().formErrors.y + store.getState().formErrors.x)}`}>
                     <div className={`button-elem`}>
                         <button type="button" onClick={this.props.submit}>Submit</button>
                     </div>
                     <div className={"button-elem"}>
                         <button type="button" onClick={this.clear}>Clear</button>
                     </div>
-                    <FormErrors/>
+                    <FormErrors formErrors={store.getState().formErrors}/>
                 </div>
             </div>
         )
