@@ -1,6 +1,5 @@
 import React, {Component} from "react";
 import {clicked} from "../../app/canvas";
-import store from "../../app/store";
 
 class Graph extends Component {
 

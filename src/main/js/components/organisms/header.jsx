@@ -1,7 +1,6 @@
 import React, {Component} from "react";
 import AppHeader from "../molecules/appHeader"
-import '../css/headerStyle.css'
-import store from "../app/store";
+import store from "../../app/store";
 
 class Header extends Component {
 

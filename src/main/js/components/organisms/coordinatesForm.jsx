@@ -1,9 +1,8 @@
 import React, {Component} from "react";
 import {clearCanvas, drawCanvas} from "../../app/canvas";
-import FormErrors from "../../molecules/errors";
-import '../../css/coordForm.css'
-import {clear} from "../../api/request";
-import CoordinateInput from "../../atoms/coordinateInput";
+import FormErrors from "../molecules/errors";
+import './coordForm.css'
+import CoordinateInput from "../atoms/coordinateInput";
 
 class CoordinatesForm extends Component {
     constructor(props) {

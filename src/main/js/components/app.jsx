@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
-import Main from "./components/main/main";
-import './css/app.css'
-import Login from "./components/auth/loginForm";
-import store from "./app/store";
+import Main from "./pages/main";
+import './app.css'
+import Login from "./pages/login";
+import store from "../app/store";
 
 class App extends Component {
     componentDidMount() {
@@ -11,10 +11,6 @@ class App extends Component {
         })
     }
 
-    /*styles = {
-        backgroundImage: `url(${BackgroundImage})`
-    }
-*/
     render() {
         return (
             <div className="first-page">

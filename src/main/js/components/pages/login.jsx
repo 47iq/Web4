@@ -1,45 +1,12 @@
 import React, {Component} from "react";
 import store from "../../app/store";
-import '../../css/login.css'
+import './login.css'
 import {login, register} from "../../api/request";
-import FormErrors from "../../molecules/errors";
-import Header from "../header";
+import FormErrors from "../molecules/errors";
+import Header from "../organisms/header";
+import AuthInput from "../atoms/authInput";
 
 class Login extends Component {
-
-    signIn = e => {
-        if (this.state.usernameValid && this.state.passwordValid)
-            login(this.state.username, this.state.password).then(response => response.json().then(json => {
-                if (response.ok) {
-                    sessionStorage.setItem("token", json.accessToken)
-                    sessionStorage.setItem("refreshToken", json.refreshToken)
-                    store.dispatch({type: "changeLogin", value: "true"});
-                } else {
-                    this.setError("important", json.message)
-                    setTimeout(() => store.dispatch({type: "removeError", value: "important"}), 3000)
-                }
-            }))
-        else {
-            this.setError("important",  "Can't sign in while data is invalid")
-            setTimeout(() => store.dispatch({type: "removeError", value: "important"}), 3000)
-        }
-    }
-
-    signUp = e => {
-        if (this.state.usernameValid && this.state.passwordValid)
-            register(this.state.username, this.state.password).then(response => response.json().then(json => {
-                if (response.ok) {
-                    this.signIn(e)
-                } else {
-                    this.setError("important", json.message)
-                    setTimeout(() => store.dispatch({type: "removeError", value: "important"}), 3000)
-                }
-            }))
-        else {
-            this.setError("important",  "Can't sign up while data is invalid")
-            setTimeout(() => store.dispatch({type: "removeError", value: "important"}), 3000)
-        }
-    }
 
     constructor(props) {
         super(props);
@@ -54,8 +21,41 @@ class Login extends Component {
                 important: ''
             },
         }
-        this.signIn = this.signIn.bind(this)
-        this.signUp = this.signUp.bind(this)
+    }
+
+
+    signIn = () => {
+        if (this.state.usernameValid && this.state.passwordValid)
+            login(this.state.username, this.state.password).then(response => response.json().then(json => {
+                if (response.ok) {
+                    sessionStorage.setItem("token", json.accessToken)
+                    sessionStorage.setItem("refreshToken", json.refreshToken)
+                    store.dispatch({type: "changeLogin", value: "true"});
+                } else {
+                    this.setError("important", json.message)
+                    setTimeout(() => this.setError("important",  ""), 3000)
+                }
+            }))
+        else {
+            this.setError("important",  "Can't sign in while data is invalid")
+            setTimeout(() => this.setError("important",  ""), 3000)
+        }
+    }
+
+    signUp = () => {
+        if (this.state.usernameValid && this.state.passwordValid)
+            register(this.state.username, this.state.password).then(response => response.json().then(json => {
+                if (response.ok) {
+                    this.signIn()
+                } else {
+                    this.setError("important", json.message)
+                    setTimeout(() => this.setError("important",  ""), 3000)
+                }
+            }))
+        else {
+            this.setError("important",  "Can't sign up while data is invalid")
+            setTimeout(() => this.setError("important",  ""), 3000)
+        }
     }
 
     handleUserInput = (e) => {
@@ -112,21 +112,12 @@ class Login extends Component {
                 <Header login={false}/>
                 <div className="login-form-wrapper">
                     <form className={`login-form`}>
-                        <div className={"log-field"}>
-                            <label
-                                className={`${this.errorClass(this.state.formErrors.username)}`}>Username </label><br/>
-                            <input className={`${this.errorClass(this.state.formErrors.username)}`} type="text"
-                                   name={"username"} id="username" value={this.state.username}
-                                   onChange={(e) => this.handleUserInput(e)} maxLength={12}/>
-                        </div>
-                        <div className="log-field">
-                            <label
-                                className={`${this.errorClass(this.state.formErrors.password)}`}>Password </label><br/>
-                            <input className={`${this.errorClass(this.state.formErrors.password)}`}
-                                   type="password"
-                                   name={"password"} id="password" value={this.state.password}
-                                   onChange={(e) => this.handleUserInput(e)} maxLength={20}/>
-                        </div>
+                        <AuthInput name={"username"} type={"text"} errorClass={this.errorClass}
+                                   errorElement={this.state.formErrors.username} value={this.state.username}
+                                   handleUserInput={this.handleUserInput} maxLength={12}/>
+                        <AuthInput name={"password"} type={"password"} errorClass={this.errorClass}
+                                   errorElement={this.state.formErrors.password} value={this.state.password}
+                                   handleUserInput={this.handleUserInput} maxLength={20}/>
                         <div className={"login-buttons"}>
                             <button className="button" type="button" onClick={this.signUp}>Sign Up</button>
                             <button className="button" type="button" onClick={this.signIn}>Sign In</button>

@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 
-import '../../css/table.css';
+import './table.css';
 
 class Table extends Component {
 
@@ -8,14 +8,6 @@ class Table extends Component {
         super(props);
         this.state = {data: []};
     }
-
-    onSort(event, sortKey) {
-        const data = this.state.data;
-        data.sort((a, b) => a[sortKey].localeCompare(b[sortKey]))
-        this.setState({data})
-        /* onClick={e => this.onSort(e, 'hit')}*/
-    }
-
 
     render() {
         return (

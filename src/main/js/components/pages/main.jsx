@@ -1,10 +1,10 @@
 import React, {Component} from "react";
-import CoordinatesForm from "./coordinatesForm";
-import Table from "./table";
-import "../../css/main.css"
-import Graph from "./graph";
+import CoordinatesForm from "../organisms/coordinatesForm";
+import Table from "../molecules/table";
+import "./main.css"
+import Graph from "../atoms/graph";
 import {check, clear, getAll, refresh} from "../../api/request";
-import Header from "../header";
+import Header from "../organisms/header";
 import {clearCanvas, drawCanvas, drawPoint} from "../../app/canvas";
 import store from "../../app/store";
 
