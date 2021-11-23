@@ -6,17 +6,9 @@ class Graph extends Component {
 
     constructor(props) {
         super(props);
-        this.state = {
-            canvas: React.createRef()
-        }
     }
 
     componentDidMount() {
-        this.mounted = true;
-        store.subscribe(() => {
-            if(this.mounted)
-                this.setState({reduxState: store.getState()});
-        })
         function relMouseCoords(event){
             let totalOffsetX = 0;
             let totalOffsetY = 0;
@@ -24,7 +16,7 @@ class Graph extends Component {
             let canvasY = 0;
             let currentElement = this;
 
-            do{
+            do {
                 totalOffsetX += currentElement.offsetLeft - currentElement.scrollLeft;
                 totalOffsetY += currentElement.offsetTop - currentElement.scrollTop;
             }
@@ -38,15 +30,11 @@ class Graph extends Component {
         HTMLCanvasElement.prototype.relMouseCoords = relMouseCoords;
     }
 
-    componentWillUnmount(){
-        this.mounted = false;
-    }
-
 
     render() {
         return (
             <div className={"canvas-wrapper"}>
-                <canvas width={350} height={350} id="canvas" ref={this.state.canvas} onClick={(e) => {
+                <canvas width={350} height={350} id="canvas" onClick={(e) => {
                     clicked(e, this.props.submitInfo)
                 }}/>
             </div>

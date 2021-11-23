@@ -3,9 +3,9 @@ import CoordinatesForm from "./coordinatesForm";
 import Table from "./table";
 import "../../css/main.css"
 import Graph from "./graph";
-import {check, getAll, refresh} from "../../api/request";
+import {check, clear, getAll, refresh} from "../../api/request";
 import Header from "../header";
-import {drawCanvas, drawPoint} from "../../app/canvas";
+import {clearCanvas, drawCanvas, drawPoint} from "../../app/canvas";
 import store from "../../app/store";
 
 class Main extends Component {
@@ -18,7 +18,13 @@ class Main extends Component {
             y_form: '',
             r_form: '',
             formValid: false,
-            refreshAttempted: false
+            refreshAttempted: false,
+            formErrors: {
+                x: '',
+                y: '',
+                r: '',
+                important: ''
+            },
         }
     }
 
@@ -54,25 +60,13 @@ class Main extends Component {
     submit = () => {
         if (!this.state.formValid) {
             if (this.state.x_form === '')
-                store.dispatch({
-                    type: "addError",
-                    value: {name: "important", value: "Can't submit while X is not set!"}
-                });
+                this.setError("important", "Can't submit while X is not set!")
             else if (this.state.y_form === '')
-                store.dispatch({
-                    type: "addError",
-                    value: {name: "important", value: "Can't submit while Y is not set!"}
-                });
+                this.setError("important", "Can't submit while Y is not set!")
             else if (this.state.r_form === '')
-                store.dispatch({
-                    type: "addError",
-                    value: {name: "important", value: "Can't submit while R is not set!"}
-                });
+                this.setError("important", "Can't submit while R is not set!")
             else
-                store.dispatch({
-                    type: "addError",
-                    value: {name: "important", value: "Can't submit while data is invalid!"}
-                });
+                this.setError("important",  "Can't submit while data is invalid!")
             setTimeout(() => store.dispatch({type: "removeError", value: "important"}), 3000)
         } else {
             let information = {
@@ -86,8 +80,8 @@ class Main extends Component {
 
     submitInfo = (information) => {
         if (this.state.r_form === '') {
-            store.dispatch({type: "addError", value: {name: "important", value: "Can't submit while R is not set!"}});
-            setTimeout(() => store.dispatch({type: "removeError", value: "important"}), 3000)
+            this.setError("important",  "Can't submit while R is not set!")
+            setTimeout(() => this.setError("important", ''), 3000)
         } else
             check(information)
                 .then(response => {
@@ -112,32 +106,45 @@ class Main extends Component {
                         sessionStorage.setItem("refreshToken", json.refreshToken)
                         func()
                     } else {
-                        store.dispatch({type: "addError", value: {name: "important", value: json.message}});
+                        this.setError("important",json.message);
                         setTimeout(() => {
-                            store.dispatch({type: "removeError", value: "important"})
+                            this.setError("important", '')
                             store.dispatch({type: "changeLogin", value: null})
                         }, 3000)
                     }
                 }))
             } else {
-                store.dispatch({type: "addError", value: {name: "important", value: json.message}});
-                setTimeout(() => store.dispatch({type: "removeError", value: "important"}), 3000)
+                this.setError("important", json.message)
+                setTimeout(() => this.setError("important", "important"), 3000)
             }
         })
     }
 
-    checkNumbers = (q, a, b) => {
-        return ((q > a) && (q < b));
+    clear = () => {
+        clear().then(response => {
+            if(this.mounted)
+                if (response.ok) {
+                    this.getChecks()
+                    this.setState({refreshAttempted: false})
+                } else {
+                    this.tryToRefresh(this.clear, response)
+                }
+        })
     }
 
-    validate = () => {
-        return (this.checkNumbers(this.state.x_form, -3, 3) && this.checkNumbers(this.state.y_form, -5, 5) && this.checkNumbers(this.state.r_form, -3, 3));
+    changeRState(value) {
+        store.dispatch({type: "changeRadius", value: value})
     }
 
     setX = (x) => this.setState({x_form: x});
     setY = (y) => this.setState({y_form: y});
     setR = (r) => this.setState({r_form: r});
     setFormValid = (formValid) => this.setState({formValid: formValid})
+    setError = (name, message) => {
+        let form = Object.assign({}, this.state.formErrors);
+        form[name] = message;
+        this.setState({formErrors: form})
+    }
 
     render() {
         return (
@@ -149,9 +156,11 @@ class Main extends Component {
                                      r_form={this.state.r_form} formValid={this.state.formValid}
                                      getChecks={this.getChecks} setX={this.setX} setY={this.setY}
                                      setR={this.setR} displayError={this.displayError} setFormValid={this.setFormValid}
-                                     tryToRefresh={this.tryToRefresh} submit={this.submit}/>
+                                     tryToRefresh={this.tryToRefresh} submit={this.submit} clear={this.clear}
+                                     addError={this.setError} formErrors={this.state.formErrors} changeRState={this.changeRState}
+                    />
                 </div>
-                <Table coordinateX={"X"} coordinateY={"Y"} radius={"R"} hit={"Hit"} ldt={"Time"}/>
+                <Table coordinateX={"X"} coordinateY={"Y"} radius={"R"} hit={"Hit"} ldt={"Time"} checks={store.getState().checks}/>
             </div>)
     }
 

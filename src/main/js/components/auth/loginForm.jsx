@@ -15,15 +15,12 @@ class Login extends Component {
                     sessionStorage.setItem("refreshToken", json.refreshToken)
                     store.dispatch({type: "changeLogin", value: "true"});
                 } else {
-                    store.dispatch({type: "addError", value: {name: "important", value: json.message}});
+                    this.setError("important", json.message)
                     setTimeout(() => store.dispatch({type: "removeError", value: "important"}), 3000)
                 }
             }))
         else {
-            store.dispatch({
-                type: "addError",
-                value: {name: "important", value: "Can't sign in while data is invalid"}
-            });
+            this.setError("important",  "Can't sign in while data is invalid")
             setTimeout(() => store.dispatch({type: "removeError", value: "important"}), 3000)
         }
     }
@@ -34,12 +31,12 @@ class Login extends Component {
                 if (response.ok) {
                     this.signIn(e)
                 } else {
-                    store.dispatch({type: "addError", value: {name: "important", value: json.message}});
+                    this.setError("important", json.message)
                     setTimeout(() => store.dispatch({type: "removeError", value: "important"}), 3000)
                 }
             }))
         else {
-            store.dispatch({type: "addError", value: {name: "important", value: "Can't sign up while data is invalid"}});
+            this.setError("important",  "Can't sign up while data is invalid")
             setTimeout(() => store.dispatch({type: "removeError", value: "important"}), 3000)
         }
     }
@@ -51,6 +48,11 @@ class Login extends Component {
             password: "",
             loginValid: true,
             passwordValid: true,
+            formErrors: {
+                username: '',
+                password: '',
+                important: ''
+            },
         }
         this.signIn = this.signIn.bind(this)
         this.signUp = this.signUp.bind(this)
@@ -69,24 +71,15 @@ class Login extends Component {
         switch (fieldName) {
             case 'password':
                 passwordValid = value != null && value.length > 5
-                store.dispatch({
-                    type: "addError",
-                    value: {name: "password", value: passwordValid ? '' : ' must contain at least 6 characters'}
-                });
+                this.setError("password", passwordValid ? '' : ' must contain at least 6 characters')
                 this.setState({password: e.target.value})
                 break;
             case 'username':
                 usernameValid = value != null && value.length > 3
-                store.dispatch({
-                    type: "addError",
-                    value: {name: "username", value: usernameValid ? '' : ' must contain at least 4 characters'}
-                });
+                this.setError("username", usernameValid ? '' : ' must contain at least 4 characters')
                 if (usernameValid) {
                     usernameValid = value != null && value.match(/^[a-zA-Z]+/)
-                    store.dispatch({
-                        type: "addError",
-                        value: {name: "username", value: usernameValid ? '' : ' must start with a letter'}
-                    });
+                    this.setError("username", usernameValid ? '' : ' must start with a letter')
                 }
                 this.setState({username: e.target.value})
                 break;
@@ -107,6 +100,12 @@ class Login extends Component {
         return (error.length === 0 ? '' : 'login-error');
     }
 
+    setError(name, message) {
+        let form = Object.assign({}, this.state.formErrors);
+        form[name] = message;
+        this.setState({formErrors: form})
+    }
+
     render() {
         return (
             <div>
@@ -115,24 +114,24 @@ class Login extends Component {
                     <form className={`login-form`}>
                         <div className={"log-field"}>
                             <label
-                                className={`${this.errorClass(store.getState().formErrors.username)}`}>Username </label><br/>
-                            <input className={`${this.errorClass(store.getState().formErrors.username)}`} type="text"
+                                className={`${this.errorClass(this.state.formErrors.username)}`}>Username </label><br/>
+                            <input className={`${this.errorClass(this.state.formErrors.username)}`} type="text"
                                    name={"username"} id="username" value={this.state.username}
                                    onChange={(e) => this.handleUserInput(e)} maxLength={12}/>
                         </div>
                         <div className="log-field">
                             <label
-                                className={`${this.errorClass(store.getState().formErrors.password)}`}>Password </label><br/>
-                            <input className={`${this.errorClass(store.getState().formErrors.password)}`}
+                                className={`${this.errorClass(this.state.formErrors.password)}`}>Password </label><br/>
+                            <input className={`${this.errorClass(this.state.formErrors.password)}`}
                                    type="password"
                                    name={"password"} id="password" value={this.state.password}
                                    onChange={(e) => this.handleUserInput(e)} maxLength={20}/>
                         </div>
                         <div className={"login-buttons"}>
                             <button className="button" type="button" onClick={this.signUp}>Sign Up</button>
-                            <button className="button" type="button" onClick={this.signIn}>Log In</button>
+                            <button className="button" type="button" onClick={this.signIn}>Sign In</button>
                         </div>
-                        <FormErrors formErrors={store.getState().formErrors}/>
+                        <FormErrors formErrors={this.state.formErrors}/>
                     </form>
                 </div>
             </div>

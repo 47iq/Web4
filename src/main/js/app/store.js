@@ -3,14 +3,6 @@ import {createStore} from "redux";
 const initialState = {
     login: sessionStorage.getItem("login"),
     checks: null,
-    formErrors: {
-        x: '',
-        y: '',
-        r: '',
-        username: '',
-        password: '',
-        important: ''
-    },
     radius: null
 };
 
@@ -25,15 +17,6 @@ function reducer(state, action) {
             state.checks = null
             state.formErrors = initialState.formErrors
             return state;
-        case "addError":
-            state.formErrors[action.value.name] = action.value.value
-            return state
-        case "removeError":
-            state.formErrors[action.value] = ''
-            return state
-        case "removeErrors":
-            state.formErrors = initialState.formErrors
-            return state
         case "appendCheck":
             state.checks.push(action.value)
             return state;

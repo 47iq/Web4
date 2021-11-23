@@ -1,25 +1,12 @@
 import React, {Component} from "react";
 
 import '../../css/table.css';
-import store from "../../app/store";
 
 class Table extends Component {
 
     constructor(props) {
         super(props);
         this.state = {data: []};
-    }
-
-    componentDidMount() {
-        this.mounted = true;
-        store.subscribe(() => {
-            if (this.mounted)
-                this.setState({reduxState: store.getState()});
-        })
-    }
-
-    componentWillUnmount() {
-        this.mounted = false;
     }
 
     onSort(event, sortKey) {
@@ -54,7 +41,7 @@ class Table extends Component {
                     </tr>
                     </thead>
                     <tbody>
-                    {(store.getState().checks) ? store.getState().checks.map(function (check) {
+                    {(this.props.checks) ? this.props.checks.map(function (check) {
                             return (
                                 <tr key={check.pointId}>
                                     <td>{Math.floor(check.coordinateX * 100) / 100}</td>
