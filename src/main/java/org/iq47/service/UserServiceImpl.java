@@ -26,7 +26,6 @@ public class UserServiceImpl implements UserService {
     public UserDTO saveUser(UserDTO userDto) {
         User userEntity = UserDTOConverter.dtoToEntity(userDto);
         System.out.println(userEntity);
-        // making roles persistent from transient
         Set<Role> rolePersistSet = userEntity.getRoleSet().stream()
                 .map(rt -> roleRepo.findByRoleName(rt.getRoleName()))
                 .collect(Collectors.toSet());

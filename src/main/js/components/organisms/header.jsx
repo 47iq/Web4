@@ -8,7 +8,7 @@ class Header extends Component {
         super(props);
     }
 
-    logout = e => {
+    logout = () => {
         sessionStorage.setItem("token", null)
         store.dispatch({type: "changeLogin", value: null});
     }

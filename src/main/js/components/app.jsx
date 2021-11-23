@@ -14,7 +14,7 @@ class App extends Component {
     render() {
         return (
             <div className="first-page">
-                {store.getState().login && store.getState().login !== "null" ? <Main/> : <Login/>}
+                {store.getState().login ? <Main/> : <Login/>}
             </div>
         )
     }

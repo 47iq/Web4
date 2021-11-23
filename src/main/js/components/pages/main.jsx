@@ -67,7 +67,7 @@ class Main extends Component {
                 this.setError("important", "Can't submit while R is not set!")
             else
                 this.setError("important",  "Can't submit while data is invalid!")
-            setTimeout(() => store.dispatch({type: "removeError", value: "important"}), 3000)
+            setTimeout(() => this.setError("important", ''), 3000)
         } else {
             let information = {
                 "x": this.state.x_form,
@@ -115,7 +115,7 @@ class Main extends Component {
                 }))
             } else {
                 this.setError("important", json.message)
-                setTimeout(() => this.setError("important", "important"), 3000)
+                setTimeout(() => this.setError("important", ''), 3000)
             }
         })
     }

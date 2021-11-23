@@ -19,8 +19,7 @@ public class DataBaseLoader {
     @Bean
     CommandLineRunner runRoles(RoleService roleService) {
         return args -> {
-            Arrays.stream(UserRole.values()).forEach(role ->
-                    log.info("Preloading " + roleService.saveRole(new Role(role))));
+            Arrays.stream(UserRole.values()).forEach(role -> roleService.saveRole(new Role(role)));
         };
     }
 }

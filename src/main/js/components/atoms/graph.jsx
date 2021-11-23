@@ -1,10 +1,16 @@
 import React, {Component} from "react";
-import {clicked} from "../../app/canvas";
+import { useResizeDetector } from 'react-resize-detector';
+import { withResizeDetector } from 'react-resize-detector';
+import ResizeObserver from 'rc-resize-observer';
+import './graph.css'
+import Canvas from "./canvas";
+import {clicked, drawCanvas} from "../../app/canvas";
 
 class Graph extends Component {
 
     constructor(props) {
         super(props);
+        this.ref = React.createRef();
     }
 
     componentDidMount() {
@@ -29,14 +35,23 @@ class Graph extends Component {
         HTMLCanvasElement.prototype.relMouseCoords = relMouseCoords;
     }
 
-
     render() {
         return (
-            <div className={"canvas-wrapper"}>
-                <canvas width={350} height={350} id="canvas" onClick={(e) => {
+            <ResizeObserver
+                onResize={(dimensions) => {
+                    console.log(dimensions.width + " " + dimensions.height);
+                    const canvas = document.getElementById("canvas")
+                    canvas.width = Math.min(Math.min(dimensions.width, dimensions.height), 350)
+                    canvas.height = Math.min(Math.min(dimensions.width, dimensions.height), 350)
+                    drawCanvas(canvas)
+                }}
+            >
+            <div ref={this.ref} id={"canvas-wrapper"} className={"canvas-wrapper"}>
+                <canvas  id="canvas" width="350" height="350" onClick={(e) => {
                     clicked(e, this.props.submitInfo)
                 }}/>
             </div>
+            </ResizeObserver>
         )
     }
 

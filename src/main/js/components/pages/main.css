@@ -10,7 +10,8 @@
 }
 
 .canvas-wrapper {
-    margin: auto;
+    height: 100%;
+    width: 100%;
     display: inline-block;
     flex: 2.5;
 }
@@ -46,12 +47,6 @@
     flex: 5;
     /*margin-left: auto;*/
 }
-
-canvas {
-    cursor: crosshair;
-    height: 100%;
-}
-
 
 @media screen and (max-width: 1176px) and (min-width: 747px){
     .button-wrapper {
