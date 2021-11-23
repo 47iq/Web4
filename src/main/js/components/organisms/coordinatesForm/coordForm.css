@@ -1,26 +1,13 @@
 .has-error {
     background-color: #1a1a1a;
     color: red;
-    border: 5px outset red;
+    border: 0.35vw outset red;
 }
 
 .nums-field {
     background-color: #1a1a1a;
     color: white;
-    border: 5px outset rgba(0, 0, 255, 0.68);
-}
-
-.form-group {
-    margin: auto;
-    padding: 8px;
-    border-radius: 10px;
-    text-align: center;
-    width: fit-content;
-}
-
-
-:not(form)+.form-group{
-    margin-top: 5vh;
+    border: 0.35vw outset rgba(0, 0, 255, 0.68);
 }
 
 .main-wrapper .error-text+.error-text {
@@ -39,16 +26,9 @@
 @media screen and (max-width: 747px) {
     .nums-field, .has-error {
         border: none
-
     }
 
-    :not(form)+.form-group {
-        margin-top: 0;
-    }
-
-    .form-group {
-        padding: 0;
-    }
+    v
 
     input[type=text] {
         text-align: center;
@@ -56,5 +36,11 @@
 
     .error-text {
         font-size: small;
+    }
+}
+
+@media screen and (min-width: 1176px) {
+    .error-text {
+        font-size: 1vw;
     }
 }

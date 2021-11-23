@@ -48,8 +48,12 @@
 }
 
 .log-field {
-    margin-top: 5%;
+    margin-top: 2%;
     font-size: larger;
+}
+
+.log-field+.log-field {
+    margin-top: 5%;
 }
 
 .log-field label+label {
@@ -68,6 +72,7 @@
 
 .login-buttons button{
     padding: 2% 4%;
+    font-size: 1vw;
 }
 
 .login-buttons button+button{
@@ -94,5 +99,21 @@
     .log-field {
         /*font-size: larger;*/
         font-size: large;
+    }
+}
+
+@media screen and (min-width: 1176px) {
+    .log-field {
+        /*font-size: larger;*/
+        font-size: 1.5vw;
+    }
+
+    .login-form .error-text {
+        margin-top: 2.3vw;
+        font-size: 1.45vw;
+    }
+
+    .login-buttons {
+        margin-top: 2%;
     }
 }

@@ -1,5 +1,5 @@
 th {
-    cursor: pointer;
+    /*cursor: pointer;*/
     background-color: rgba(1, 1, 210, 0.68);
     color: white;
 }
@@ -27,14 +27,14 @@ tbody tr:nth-child(even) {
 }
 
 table {
-    margin-left: 10%;
-    margin-right: 10%;
+    margin-left: 5%;
+    margin-right: 5%;
 
     table-layout: fixed;
     width: 100%;
     /*border: 5px outset ;*/
     overflow:hidden;
-    border-radius: 20px;
+    border-radius: 2vw;
     /*border: 7px outset rgba(0, 0, 255, 0.68);*/
 
     border-collapse: collapse;
@@ -46,6 +46,7 @@ table {
     margin-bottom: 5%;
 }
 
+
 @media screen and (max-width: 747px) {
     table * {
         font-size: small;
@@ -54,6 +55,12 @@ table {
 
 @media screen and (max-width: 450px) {
     table * {
-        font-size: smaller;
+        font-size: 2vw;
+    }
+}
+
+@media screen and (min-width: 1176px) {
+    table * {
+        font-size: 1vw;
     }
 }

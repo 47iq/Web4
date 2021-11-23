@@ -1,6 +1,6 @@
 import React, {Component} from "react";
-import AppHeader from "../molecules/appHeader"
-import store from "../../app/store";
+import AppHeader from "../../molecules/appHeader/appHeader"
+import store from "../../../app/store";
 
 class Header extends Component {
 

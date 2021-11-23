@@ -1,12 +1,12 @@
 import React, {Component} from "react";
-import CoordinatesForm from "../organisms/coordinatesForm";
-import Table from "../molecules/table";
+import CoordinatesForm from "../../organisms/coordinatesForm/coordinatesForm";
+import Table from "../../molecules/table/table";
 import "./main.css"
-import Graph from "../atoms/graph";
-import {check, clear, getAll, refresh} from "../../api/request";
-import Header from "../organisms/header";
-import {clearCanvas, drawCanvas, drawPoint} from "../../app/canvas";
-import store from "../../app/store";
+import Graph from "../../atoms/graph/graph";
+import {check, clear, getAll, refresh} from "../../../api/request";
+import Header from "../../organisms/header/header";
+import {clearCanvas, drawCanvas, drawPoint} from "../../../app/canvas";
+import store from "../../../app/store";
 
 class Main extends Component {
 
@@ -29,9 +29,9 @@ class Main extends Component {
     }
 
     componentDidMount() {
-        this.mounted = true;
+        this.state.mounted = true;
         store.subscribe(() => {
-            if (this.mounted)
+            if (this.state.mounted)
                 this.setState({reduxState: store.getState()});
         })
         if (store.getState().checks === null) {
@@ -40,7 +40,7 @@ class Main extends Component {
     }
 
     componentWillUnmount() {
-        this.mounted = false;
+        this.state.mounted = false;
     }
 
     getChecks = () => {
@@ -78,11 +78,24 @@ class Main extends Component {
         }
     }
 
-    submitInfo = (information) => {
+    handleCanvasSubmit = (information) => {
         if (this.state.r_form === '') {
             this.setError("important",  "Can't submit while R is not set!")
             setTimeout(() => this.setError("important", ''), 3000)
-        } else
+        } else if(!this.validateR(information.r)) {
+            this.setError("important",  "R must be in range (0; 3)!")
+            setTimeout(() => this.setError("important", ''), 3000)
+        }
+        else if(!this.validateX(information.x)) {
+            this.setError("important",  "X must be in range (-3; 3)!")
+            setTimeout(() => this.setError("important", ''), 3000)
+        } else if(!this.validateY(information.y)) {
+            this.setError("important",  "Y must be in range (-5; 5)!")
+            setTimeout(() => this.setError("important", ''), 3000)
+        } else this.submitInfo(information)
+    }
+
+    submitInfo = (information) => {
             check(information)
                 .then(response => {
                     if (response.ok) {
@@ -92,19 +105,22 @@ class Main extends Component {
                             drawPoint(information, document.getElementById("canvas"), this.state.r_form)
                         })
                     } else {
-                        this.tryToRefresh(this.submit, response)
+                        this.tryToRefresh(this.submitInfo, response, information)
                     }
                 })
     }
 
-    tryToRefresh = (func, response) => {
+    tryToRefresh = (func, response, body = null) => {
         response.json().then(json => {
-            if (json.message === "Expired or invalid JWT token") {
+            if (json.message === "Expired or invalid JWT token" || json.message === "Access denied") {
                 refresh().then(response => response.json().then(json => {
                     if (response.ok) {
                         sessionStorage.setItem("token", json.accessToken)
                         sessionStorage.setItem("refreshToken", json.refreshToken)
-                        func()
+                        if(body)
+                            func(body)
+                        else
+                            func()
                     } else {
                         this.setError("important",json.message);
                         setTimeout(() => {
@@ -122,10 +138,9 @@ class Main extends Component {
 
     clear = () => {
         clear().then(response => {
-            if(this.mounted)
+            if(this.state.mounted)
                 if (response.ok) {
                     this.getChecks()
-                    this.setState({refreshAttempted: false})
                 } else {
                     this.tryToRefresh(this.clear, response)
                 }
@@ -139,11 +154,15 @@ class Main extends Component {
     setX = (x) => this.setState({x_form: x});
     setY = (y) => this.setState({y_form: y});
     setR = (r) => this.setState({r_form: r});
+    validateX = (x) => x != null && x !== '' && !isNaN(x) && x > -3 && x < 3
+    validateY = (y) => y != null && y !== '' && !isNaN(y) && y > -5 && y < 5
+    validateR = (r) => r != null && r !== '' && !isNaN(r) && r > 0 && r < 3
     setFormValid = (formValid) => this.setState({formValid: formValid})
     setError = (name, message) => {
         let form = Object.assign({}, this.state.formErrors);
         form[name] = message;
-        this.setState({formErrors: form})
+        if(this.state.mounted)
+            this.setState({formErrors: form})
     }
 
     render() {
@@ -151,13 +170,14 @@ class Main extends Component {
             <div id="main">
                 <Header login={true}/>
                 <div className={"main-wrapper"}>
-                    <Graph r={this.state.r_form} submitInfo={this.submitInfo}/>
+                    <Graph r={this.state.r_form} submitInfo={this.handleCanvasSubmit}/>
                     <CoordinatesForm validate={this.validate} x_form={this.state.x_form} y_form={this.state.y_form}
                                      r_form={this.state.r_form} formValid={this.state.formValid}
                                      getChecks={this.getChecks} setX={this.setX} setY={this.setY}
                                      setR={this.setR} displayError={this.displayError} setFormValid={this.setFormValid}
                                      tryToRefresh={this.tryToRefresh} submit={this.submit} clear={this.clear}
                                      addError={this.setError} formErrors={this.state.formErrors} changeRState={this.changeRState}
+                                     validateX={this.validateX} validateY={this.validateY} validateR={this.validateR}
                     />
                 </div>
                 <Table coordinateX={"X"} coordinateY={"Y"} radius={"R"} hit={"Hit"} ldt={"Time"} checks={store.getState().checks}/>

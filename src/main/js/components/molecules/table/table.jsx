@@ -10,6 +10,10 @@ class Table extends Component {
     }
 
     render() {
+        if (!this.props.checks || this.props.checks.length === 0)
+            return (
+                <div className={"table-wrapper"}/>
+            )
         return (
             <div className={"table-wrapper"}>
                 <table className="table is-bordered is-hoverable is-fullwidth has-text-centered">

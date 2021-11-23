@@ -1,10 +1,11 @@
 import React, {Component} from "react";
-import store from "../../app/store";
+import store from "../../../app/store";
 import './login.css'
-import {login, register} from "../../api/request";
-import FormErrors from "../molecules/errors";
-import Header from "../organisms/header";
-import AuthInput from "../atoms/authInput";
+import {login, register} from "../../../api/request";
+import FormErrors from "../../molecules/errors/errors";
+import Header from "../../organisms/header/header";
+import AuthInput from "../../atoms/authInput/authInput";
+import FormButton from "../../atoms/formButton/formButton";
 
 class Login extends Component {
 
@@ -21,6 +22,14 @@ class Login extends Component {
                 important: ''
             },
         }
+    }
+
+    componentDidMount() {
+        this.state.component_mounted = true
+    }
+
+    componentWillUnmount() {
+        this.state.component_mounted = false
     }
 
 
@@ -103,7 +112,8 @@ class Login extends Component {
     setError(name, message) {
         let form = Object.assign({}, this.state.formErrors);
         form[name] = message;
-        this.setState({formErrors: form})
+        if(this.state.component_mounted)
+            this.setState({formErrors: form})
     }
 
     render() {
@@ -119,6 +129,8 @@ class Login extends Component {
                                    errorElement={this.state.formErrors.password} value={this.state.password}
                                    handleUserInput={this.handleUserInput} maxLength={20}/>
                         <div className={"login-buttons"}>
+                            {/*<FormButton submit={this.signUp} text={"Sign Up"}/>
+                            <FormButton submit={this.signIn} text={"Sign In"}/>*/}
                             <button className="button" type="button" onClick={this.signUp}>Sign Up</button>
                             <button className="button" type="button" onClick={this.signIn}>Sign In</button>
                         </div>

@@ -1,4 +1,5 @@
 import React, {Component} from "react";
+import './coordinatesInput.css'
 
 class CoordinateInput extends Component {
 

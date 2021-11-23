@@ -1,4 +1,5 @@
 import React, {Component} from "react";
+import './authInput.css'
 
 class AuthInput extends Component {
 

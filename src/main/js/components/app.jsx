@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
-import Main from "./pages/main";
+import Main from "./pages/main/main";
 import './app.css'
-import Login from "./pages/login";
+import Login from "./pages/login/login";
 import store from "../app/store";
 
 class App extends Component {
@@ -14,7 +14,7 @@ class App extends Component {
     render() {
         return (
             <div className="first-page">
-                {store.getState().login ? <Main/> : <Login/>}
+                {store.getState().login && store.getState().login !== "null" ? <Main/> : <Login/>}
             </div>
         )
     }

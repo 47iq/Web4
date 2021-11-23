@@ -21,6 +21,10 @@ function canvasToY(clickY, h) {
 
 function drawCanvasPoint(x, y, r, canvas) {
     let context = canvas.getContext("2d");
+    if(window.innerWidth > 350 * 3)
+        context.strokeWidth = canvas.width / 550
+    else
+        context.strokeWidth = window.innerWidth / 3 / 550
     let res = isAreaHit(x, y, r)
     context.strokeStyle = "#ffffff";
     if (!res) {
@@ -29,7 +33,7 @@ function drawCanvasPoint(x, y, r, canvas) {
         context.fillStyle = "#5FFF33";
     }
     context.beginPath();
-    context.arc(xToCanvas(x, canvas.width), yToCanvas(y, canvas.height), 4, 0, 2 * Math.PI);
+    context.arc(xToCanvas(x, canvas.width), yToCanvas(y, canvas.height), canvas.width / 150, 0, 2 * Math.PI);
     context.fill();
     context.stroke();
     context.closePath();
@@ -53,21 +57,24 @@ function isAreaHit(x, y, r) {
         (x <= 0 && y <= 0 && y >= -r/2 && (y >= (-x - r/2)) && x >= -r/2)
 }
 
-function drawAxis(context, w, h, xR, yR) {
+function drawAxis(canvas, context, w, h, xR, yR) {
     context.beginPath();
     context.strokeStyle = "#ffffff";
-    context.lineWidth = 2;
+    if(window.innerWidth > 350 * 3) {
+        context.strokeWidth = canvas.width / 550
+        context.lineWidth= canvas.width / 550
+    } else {
+        context.strokeWidth = window.innerWidth / 3 / 550
+        context.lineWidth= canvas.width / 3 / 550
+    }
     context.moveTo(0, h / 2);
     context.lineTo(w, h / 2);
     context.stroke();
     context.beginPath();
     context.strokeStyle = "#ffffff";
-    context.lineWidth = 2;
     context.moveTo(w / 2, h);
     context.lineTo(w / 2, 0);
     context.stroke();
-    context.lineWidth = 1
-    context.strokeWidth = 0.5
     context.strokeText("1.5", w / 2 + xR / 2, h / 2);
     context.strokeText("3", w / 2 + xR, h / 2);
     context.strokeText("-1.5", w / 2, h / 2 + yR / 2);
@@ -106,7 +113,7 @@ export function drawCanvas(canvas) {
     context.arc(w / 2, h / 2, xR * r / 2 / MAX_RADIUS, -Math.PI / 2, 0);
     context.fill();
 
-    drawAxis(context, w, h, xR, yR);
+    drawAxis(canvas, context, w, h, xR, yR);
     drawChecks(checks, canvas, r)
 }
 
@@ -118,7 +125,7 @@ export function clearCanvas(canvas) {
     let yR = h * 0.4
     context.fillStyle = "#1a1a1a"
     context.fillRect(0, 0, w, h)
-    drawAxis(context, w, h, xR, yR)
+    drawAxis(canvas, context, w, h, xR, yR)
     drawChecks(store.getState().checks, canvas, 0)
 }
 

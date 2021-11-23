@@ -1,8 +1,9 @@
 import React, {Component} from "react";
-import {clearCanvas, drawCanvas} from "../../app/canvas";
-import FormErrors from "../molecules/errors";
+import {clearCanvas, drawCanvas} from "../../../app/canvas";
+import FormErrors from "../../molecules/errors/errors";
 import './coordForm.css'
-import CoordinateInput from "../atoms/coordinateInput";
+import CoordinateInput from "../../atoms/coordinatesInput/coordinateInput";
+import FormButton from "../../atoms/formButton/formButton";
 
 class CoordinatesForm extends Component {
     constructor(props) {
@@ -27,17 +28,17 @@ class CoordinatesForm extends Component {
 
         switch (fieldName) {
             case 'X':
-                xValid = value != null && value !== '' && !isNaN(value) && value < 3 && value > -3
+                xValid = this.props.validateX(value)
                 this.props.addError("x", xValid ? '' : ' must be in range (-3; 3)')
                 this.props.setX(e.target.value)
                 break;
             case 'Y':
-                yValid = value != null && value !== '' && !isNaN(value) && value < 5 && value > -5
+                yValid = this.props.validateY(value)
                 this.props.addError("y", yValid ? '' : ' must be in range (-5; 5)')
                 this.props.setY(e.target.value)
                 break;
             case 'R':
-                rValid = value != null && value !== '' && !isNaN(value) && value < 3 && value > 0
+                rValid = this.props.validateR(value)
                 this.props.addError("r", rValid ? '' : ' must be in range (0; 3)')
                 if (rValid) {
                     this.props.setR(e.target.value)
@@ -85,12 +86,8 @@ class CoordinatesForm extends Component {
                     </form>
                 </div>
                 <div className={`button-wrapper ${this.errorClass(this.props.formErrors.r + this.props.formErrors.y + this.props.formErrors.x)}`}>
-                    <div className={`button-elem`}>
-                        <button type="button" onClick={this.props.submit}>Submit</button>
-                    </div>
-                    <div className={"button-elem"}>
-                        <button type="button" onClick={this.props.clear}>Clear</button>
-                    </div>
+                    <FormButton submit={this.props.submit} text={"Submit"}/>
+                    <FormButton submit={this.props.clear} text={"Clear"}/>
                     <FormErrors formErrors={this.props.formErrors}/>
                 </div>
             </div>
