@@ -1,4 +1,5 @@
 import React, {Component} from "react";
+import AppHeader from "./organisms/appHeader"
 import '../css/headerStyle.css'
 import store from "../app/store";
 
@@ -15,19 +16,7 @@ class Header extends Component {
 
     render() {
         return (
-            <header className={"header"}>
-                <div className={"header-button-wrapper"}>
-                    {this.props.login ? <button className={"logout"} onClick={this.logout}>Log Out</button> : ""}
-                </div>
-                <div>
-                <span>
-                    Pavel Danilov, P3210
-                </span>
-                    <span>
-                    Variant 1777
-                </span>
-                </div>
-            </header>
+            <AppHeader isLoggedIn={this.props.login} logout={this.logout}/>
         )
     }
 }

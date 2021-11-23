@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 import {clearCanvas, drawCanvas} from "../../app/canvas";
-import FormErrors from "../errors";
+import FormErrors from "../organisms/errors";
 import '../../css/coordForm.css'
 import {clear} from "../../api/request";
 import store from "../../app/store";

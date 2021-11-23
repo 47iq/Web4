@@ -57,10 +57,10 @@ class Table extends Component {
                     {(store.getState().checks) ? store.getState().checks.map(function (check) {
                             return (
                                 <tr key={check.pointId}>
-                                    <td>{Math.round((check.coordinateX + Number.EPSILON) * 100) / 100}</td>
-                                    <td>{Math.round((check.coordinateY + Number.EPSILON) * 100) / 100}</td>
-                                    <td>{Math.round((check.radius + Number.EPSILON) * 100) / 100}</td>
-                                    <td style={{color: check.hit ? 'lime' : 'red'}}>{check.hit.toString()}</td>
+                                    <td>{Math.floor(check.coordinateX * 100) / 100}</td>
+                                    <td>{Math.floor(check.coordinateY * 100) / 100}</td>
+                                    <td>{Math.floor(check.radius * 100) / 100}</td>
+                                    <td style={{color: check.hit ? '#00a404' : '#cb0101'}}>{check.hit.toString()}</td>
                                     <td>{check.time.toString()}</td>
                                 </tr>
                             );

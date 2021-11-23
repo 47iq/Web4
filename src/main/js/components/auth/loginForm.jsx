@@ -2,7 +2,7 @@ import React, {Component} from "react";
 import store from "../../app/store";
 import '../../css/login.css'
 import {login, register} from "../../api/request";
-import FormErrors from "../errors";
+import FormErrors from "../organisms/errors";
 import Header from "../header";
 
 class Login extends Component {

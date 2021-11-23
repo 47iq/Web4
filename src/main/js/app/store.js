@@ -31,6 +31,9 @@ function reducer(state, action) {
         case "removeError":
             state.formErrors[action.value] = ''
             return state
+        case "removeErrors":
+            state.formErrors = initialState.formErrors
+            return state
         case "appendCheck":
             state.checks.push(action.value)
             return state;

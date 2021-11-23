@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import store from "../app/store";
+import store from "../../app/store";
 
 class FormErrors extends Component {
     constructor(props) {
@@ -8,6 +8,7 @@ class FormErrors extends Component {
 
     componentDidMount() {
         this.mounted = true;
+        console.log("now")
         store.subscribe(() => {
             if (this.mounted)
                 this.setState({reduxState: store.getState()});
