@@ -6,7 +6,8 @@
 
     <groupId>org.example</groupId>
     <artifactId>Web4</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1</version>
+    <packaging>jar</packaging>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -21,6 +22,7 @@
         <node.version>v16.13.0</node.version>
         <yarn.version>v1.22.15</yarn.version>
         <frontend-maven-plugin.version>1.12.0</frontend-maven-plugin.version>
+        <start-class>org.iq47.ServingWebContentApplication</start-class>
     </properties>
 
     <dependencies>
@@ -51,10 +53,6 @@
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-devtools</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
@@ -71,6 +69,11 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-devtools</artifactId>
             <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.reactivestreams</groupId>
+            <artifactId>reactive-streams</artifactId>
+            <version>1.0.1</version>
         </dependency>
 
         <dependency>
@@ -139,14 +142,14 @@
                 </configuration>
 
                 <executions>
-                    <execution>
+                    <!--<execution>
                         <id>install-frontend-tools</id>
                         <goals>
                             <goal>install-node-and-yarn</goal>
                         </goals>
                     </execution>
 
-                    <execution>
+                    &lt;!&ndash;<execution>
                         <id>yarn-install</id>
                         <goals>
                             <goal>yarn</goal>
@@ -154,7 +157,7 @@
                         <configuration>
                             <arguments>install</arguments>
                         </configuration>
-                    </execution>
+                    </execution>&ndash;&gt;
 
                     <execution>
                         <id>build-frontend</id>
@@ -165,7 +168,7 @@
                         <configuration>
                             <arguments>build</arguments>
                         </configuration>
-                    </execution>
+                    </execution>-->
                 </executions>
             </plugin>
         </plugins>

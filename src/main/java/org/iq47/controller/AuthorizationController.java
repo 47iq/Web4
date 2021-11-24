@@ -85,8 +85,10 @@ public class AuthorizationController {
             return ResponseEntity.status(HttpStatus.CREATED).body(new JwtResponse(accessToken, TOKEN_TYPE,
                     refreshTokenOptional.get(), userDetails.getId(), userDetails.getUsername(), roles));
 
-        } catch (InvalidRequestException | BadCredentialsException ex) {
+        } catch (InvalidRequestException ex) {
             return ResponseEntity.badRequest().body(new ResponseWrapper(ex.getMessage()));
+        } catch (BadCredentialsException ex) {
+            return ResponseEntity.badRequest().body(new ResponseWrapper("Invalid username or password"));
         } catch (Exception ex) {
             return reportError(req, ex);
         }

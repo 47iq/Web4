@@ -39,7 +39,7 @@ public class JwtFilter extends OncePerRequestFilter {
             // send response
             res.resetBuffer();
             res.setStatus(ex.getHttpStatus().value());
-            res.setHeader("Content-Type", "text/plain");
+            res.setHeader("Content-Type", "application/json");
             PrintWriter out = res.getWriter();
             JSONObject object = new JSONObject();
             object.appendField("message", ex.getMessage());

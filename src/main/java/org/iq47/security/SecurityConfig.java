@@ -38,6 +38,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests()
 
                 // points
+                .antMatchers("/*").permitAll()
+                .antMatchers("/built/**").permitAll()
+                .antMatchers("/api/users/**").permitAll()
                 .antMatchers("/api/points/check/*").hasAnyAuthority(
                         UserRole.ROLE_USER.getAuthority())
                 .antMatchers("/api/points/get/*").hasAnyAuthority(
@@ -45,7 +48,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/points/clear/*").hasAnyAuthority(
                         UserRole.ROLE_USER.getAuthority())
                 // disable everything else
-                .anyRequest().permitAll();
+                .anyRequest().authenticated();
 
         // If a user try to access a resource without having enough permissions
 //        http.exceptionHandling().accessDeniedPage("/login");

@@ -21,10 +21,7 @@ function canvasToY(clickY, h) {
 
 function drawCanvasPoint(x, y, r, canvas) {
     let context = canvas.getContext("2d");
-    if(window.innerWidth > 350 * 3)
-        context.strokeWidth = canvas.width / 550
-    else
-        context.strokeWidth = window.innerWidth / 3 / 550
+    changeWidths(context, canvas);
     let res = isAreaHit(x, y, r)
     context.strokeStyle = "#ffffff";
     if (!res) {
@@ -60,13 +57,7 @@ function isAreaHit(x, y, r) {
 function drawAxis(canvas, context, w, h, xR, yR) {
     context.beginPath();
     context.strokeStyle = "#ffffff";
-    if(window.innerWidth > 350 * 3) {
-        context.strokeWidth = canvas.width / 550
-        context.lineWidth= canvas.width / 550
-    } else {
-        context.strokeWidth = window.innerWidth / 3 / 550
-        context.lineWidth= canvas.width / 3 / 550
-    }
+    changeWidths(context, canvas);
     context.moveTo(0, h / 2);
     context.lineTo(w, h / 2);
     context.stroke();
@@ -87,8 +78,22 @@ function drawAxis(canvas, context, w, h, xR, yR) {
     context.strokeText("X", w - 10, h / 2);
 }
 
+function changeWidths(context, canvas) {
+    if (window.innerWidth > 350 * 3) {
+        context.strokeWidth = canvas.width / 550
+        context.lineWidth = canvas.width / 550
+        context.font = "20px Arial";
+    } else {
+        context.strokeWidth = Math.max(1, window.innerWidth / 3 / 550)
+        context.lineWidth = Math.max(1, canvas.width / 3 / 550)
+        const size = window.innerWidth / 3 / 25
+        context.font = Math.max(8, size) + "px Arial";
+    }
+}
+
 export function drawCanvas(canvas) {
     let context = canvas.getContext("2d");
+    changeWidths(context, canvas);
     let r = store.getState().radius
     let checks = store.getState().checks
     let w = canvas.width
@@ -99,7 +104,6 @@ export function drawCanvas(canvas) {
     context.fillRect(0, 0, w, h)
 
     context.fillStyle = "rgba(0, 0, 255, 0.68)";
-    context.font = "14px Verdana";
     context.fillRect(w / 2, h / 2, xR * r / MAX_RADIUS, yR * r / MAX_RADIUS);
 
     context.beginPath();

@@ -93,6 +93,11 @@
         /*font-size: larger;*/
         font-size: medium;
     }
+
+    .login-buttons button{
+        padding: 2% 4%;
+        font-size: 2vw;
+    }
 }
 
 @media screen and (max-width: 1176px) and (min-width: 747px){

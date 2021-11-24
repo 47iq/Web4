@@ -52,7 +52,19 @@ class Main extends Component {
                         drawCanvas(document.getElementById("canvas"))
                     })
                 } else {
-                    this.tryToRefresh(this.getChecks, response)
+                    refresh().then(response => response.json().then(json => {
+                        if (response.ok) {
+                            sessionStorage.setItem("token", json.accessToken)
+                            sessionStorage.setItem("refreshToken", json.refreshToken)
+                            this.getChecks()
+                        } else {
+                            this.setError("important", "Session has expired");
+                            setTimeout(() => {
+                                this.setError("important", '')
+                                store.dispatch({type: "changeLogin", value: null})
+                            }, 3000)
+                        }
+                    }))
                 }
             })
     }
