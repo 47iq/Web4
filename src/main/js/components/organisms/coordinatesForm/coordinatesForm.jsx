@@ -25,7 +25,8 @@ class CoordinatesForm extends Component {
         let xValid = this.state.xValid;
         let yValid = this.state.yValid;
         let rValid = this.state.rValid;
-
+        //todo
+        console.log("info")
         switch (fieldName) {
             case 'X':
                 xValid = this.props.validateX(value)
@@ -43,11 +44,9 @@ class CoordinatesForm extends Component {
                 if (rValid) {
                     this.props.setR(e.target.value)
                     this.props.changeRState(e.target.value)
-                    drawCanvas(document.getElementById("canvas"))
                 } else {
                     this.props.setR(e.target.value)
                     this.props.changeRState(null)
-                    clearCanvas(document.getElementById("canvas"))
                 }
                 break;
             default:
@@ -58,11 +57,7 @@ class CoordinatesForm extends Component {
             yValid: yValid,
             rValid: rValid
         })
-        this.validateForm(xValid, yValid, rValid)
-    }
-
-    validateForm(xValid, yValid, rValid) {
-        this.props.setFormValid(xValid && yValid && rValid);
+        drawCanvas(document.getElementById("canvas"))
     }
 
     errorClass(error) {

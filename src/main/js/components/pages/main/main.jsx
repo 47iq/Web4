@@ -17,7 +17,6 @@ class Main extends Component {
             x_form: '',
             y_form: '',
             r_form: '',
-            formValid: false,
             refreshAttempted: false,
             formErrors: {
                 x: '',
@@ -70,7 +69,7 @@ class Main extends Component {
     }
 
     submit = () => {
-        if (!this.state.formValid) {
+        if (!this.validateForm()) {
             if (this.state.x_form === '')
                 this.setError("important", "Can't submit while X is not set!")
             else if (this.state.y_form === '')
@@ -170,6 +169,9 @@ class Main extends Component {
     validateY = (y) => y != null && y !== '' && !isNaN(y) && y > -5 && y < 5
     validateR = (r) => r != null && r !== '' && !isNaN(r) && r > 0 && r < 3
     setFormValid = (formValid) => this.setState({formValid: formValid})
+    validateForm() {
+        return (this.validateX(this.state.x_form) && this.validateY(this.state.y_form) && this.validateR(this.state.r_form));
+    }
     setError = (name, message) => {
         let form = Object.assign({}, this.state.formErrors);
         form[name] = message;
@@ -182,10 +184,9 @@ class Main extends Component {
             <div id="main">
                 <Header login={true}/>
                 <div className={"main-wrapper"}>
-                    <Graph r={this.state.r_form} submitInfo={this.handleCanvasSubmit}/>
+                    <Graph submitInfo={this.handleCanvasSubmit}/>
                     <CoordinatesForm validate={this.validate} x_form={this.state.x_form} y_form={this.state.y_form}
-                                     r_form={this.state.r_form} formValid={this.state.formValid}
-                                     getChecks={this.getChecks} setX={this.setX} setY={this.setY}
+                                     r_form={this.state.r_form} getChecks={this.getChecks} setX={this.setX} setY={this.setY}
                                      setR={this.setR} displayError={this.displayError} setFormValid={this.setFormValid}
                                      tryToRefresh={this.tryToRefresh} submit={this.submit} clear={this.clear}
                                      addError={this.setError} formErrors={this.state.formErrors} changeRState={this.changeRState}

@@ -73,6 +73,7 @@
 .login-buttons button{
     padding: 2% 4%;
     font-size: 1vw;
+    border-radius: 0.5vw
 }
 
 .login-buttons button+button{

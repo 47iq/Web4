@@ -34,9 +34,7 @@ public class JwtFilter extends OncePerRequestFilter {
                 SecurityContextHolder.getContext().setAuthentication(auth);
             }
         } catch (ProviderException ex) {
-            //this is very important, since it guarantees the user is not authenticated at all
             SecurityContextHolder.clearContext();
-            // send response
             res.resetBuffer();
             res.setStatus(ex.getHttpStatus().value());
             res.setHeader("Content-Type", "application/json");
@@ -46,7 +44,6 @@ public class JwtFilter extends OncePerRequestFilter {
             out.write(object.toJSONString());
             return;
         } catch (Exception ex) {
-            // send response
             res.resetBuffer();
             res.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             res.setHeader("Content-Type", "application/json");

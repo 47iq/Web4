@@ -12,6 +12,8 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.cors.CorsConfiguration;
 
@@ -26,18 +28,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        // enable CORS support
-        http.cors().configurationSource(request -> new CorsConfiguration().applyPermitDefaultValues());
-        // httpBasic - let you enable/disable http basic authentication
         http.httpBasic().disable();
-        // disable cross site request forgery
         http.csrf().disable();
-        // stateless sessions
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
         http.authorizeRequests()
-
-                // points
                 .antMatchers("/*").permitAll()
                 .antMatchers("/built/**").permitAll()
                 .antMatchers("/api/users/**").permitAll()
@@ -47,29 +42,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         UserRole.ROLE_USER.getAuthority())
                 .antMatchers("/api/points/clear/*").hasAnyAuthority(
                         UserRole.ROLE_USER.getAuthority())
-                // disable everything else
                 .anyRequest().authenticated();
-
-        // If a user try to access a resource without having enough permissions
-//        http.exceptionHandling().accessDeniedPage("/login");
-
         http.apply(new JwtFilterConfigurer(jwtProvider));
     }
 
-    // remove encoding of password, cuz they are encoded on client-base server
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return new PasswordEncoder() {
-            @Override
-            public String encode(CharSequence charSequence) {
-                return charSequence.toString();
-            }
-
-            @Override
-            public boolean matches(CharSequence charSequence, String s) {
-                return charSequence.toString().equals(s);
-            }
-        };
+        return new BCryptPasswordEncoder();
     }
 
     @Override

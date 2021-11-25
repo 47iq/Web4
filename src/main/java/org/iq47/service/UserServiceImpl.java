@@ -8,6 +8,7 @@ import org.iq47.model.UserRepository;
 import org.iq47.model.entity.Role;
 import org.iq47.model.entity.User;
 import org.iq47.network.UserDTO;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
@@ -21,9 +22,12 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepo;
     private final RoleRepository roleRepo;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public UserDTO saveUser(UserDTO userDto) {
+        String password = userDto.getPassword();
+        userDto.setPassword(passwordEncoder.encode(password));
         User userEntity = UserDTOConverter.dtoToEntity(userDto);
         System.out.println(userEntity);
         Set<Role> rolePersistSet = userEntity.getRoleSet().stream()
@@ -31,22 +35,12 @@ public class UserServiceImpl implements UserService {
                 .collect(Collectors.toSet());
         userEntity.setRoleSet(rolePersistSet);
         User savedEntity = userRepo.save(userEntity);
-        System.out.println(savedEntity);
+        savedEntity.setPassword(password);
         return UserDTOConverter.entityToDto(savedEntity);
-    }
-
-    @Override
-    public Collection<UserDTO> getUsers() {
-        return userRepo.findAll().stream().map(UserDTOConverter::entityToDto).collect(Collectors.toList());
     }
 
     @Override
     public boolean userExistByName(String username) {
         return (userRepo.findByUsername(username).isPresent());
-    }
-
-    @Override
-    public boolean userExistById(Long id) {
-        return userRepo.findById(id).isPresent();
     }
 }

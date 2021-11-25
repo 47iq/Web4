@@ -82,7 +82,7 @@ function changeWidths(context, canvas) {
     if (window.innerWidth > 350 * 3) {
         context.strokeWidth = canvas.width / 550
         context.lineWidth = canvas.width / 550
-        context.font = "20px Arial";
+        context.font = "15px Arial";
     } else {
         context.strokeWidth = Math.max(1, window.innerWidth / 3 / 550)
         context.lineWidth = Math.max(1, canvas.width / 3 / 550)
@@ -92,6 +92,8 @@ function changeWidths(context, canvas) {
 }
 
 export function drawCanvas(canvas) {
+    /*let date = new Date()
+    console.log("Redrawn at: " + date.getTime())*/
     let context = canvas.getContext("2d");
     changeWidths(context, canvas);
     let r = store.getState().radius
@@ -122,6 +124,7 @@ export function drawCanvas(canvas) {
 }
 
 export function clearCanvas(canvas) {
+    /*console.log("Cleared at: " + date.getTime())*/
     let context = canvas.getContext("2d");
     let w = canvas.width
     let xR = w * 0.4

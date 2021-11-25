@@ -5,7 +5,6 @@ import org.iq47.model.entity.RefreshToken;
 import org.iq47.model.entity.User;
 import org.iq47.network.UserDTO;
 import org.iq47.network.request.LoginRequest;
-import org.iq47.network.request.PointCheckRequest;
 import org.iq47.network.request.RefreshRequest;
 import org.iq47.network.request.RegisterRequest;
 import org.iq47.network.response.JwtResponse;
@@ -27,6 +26,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.common.exceptions.InvalidRequestException;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -50,7 +50,7 @@ public class AuthorizationController {
     private final String TOKEN_TYPE = "Bearer";
 
     @Autowired
-    public AuthorizationController(JwtTokenService jwtTokenService, AuthenticationManager authenticationManager, UserService userService, RefreshTokenService refreshTokenService, PointValidator pointValidator, UserValidator userValidator) {
+    public AuthorizationController(JwtTokenService jwtTokenService, AuthenticationManager authenticationManager, UserService userService, RefreshTokenService refreshTokenService, PointValidator pointValidator, UserValidator userValidator, PasswordEncoder passwordEncoder) {
         this.authService = jwtTokenService;
         this.authenticationManager = authenticationManager;
         this.userService = userService;

@@ -5,6 +5,9 @@
     flex: 2.5;
 }
 
+.button-elem button {
+    border-radius: 0.5vw;
+}
 
 @media screen and (max-width: 747px) {
     .button-elem button {
